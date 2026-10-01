@@ -158,6 +158,9 @@ h1.hero-title .l2{background:linear-gradient(90deg,var(--green),var(--cyan),var(
 .proj h3{font-size:1.22rem;margin-bottom:10px}
 .proj h3 .cmd{color:var(--green);font-family:Consolas,monospace;font-size:1rem;background:rgba(0,255,136,.08);border:1px solid var(--border);padding:2px 10px;border-radius:8px}
 .proj p{color:var(--muted);font-size:.92rem;flex:1;margin-bottom:18px}
+.proj .pbanner{margin:-28px -28px 18px;height:158px;overflow:hidden;background:#0a0f0c}
+.proj .pbanner img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.proj:hover .pbanner img{transform:scale(1.06)}
 .proj .row{display:flex;gap:10px;flex-wrap:wrap}
 .mini-btn{padding:10px 20px;border-radius:30px;font-size:.85rem;font-weight:700;text-decoration:none;transition:all .2s;cursor:pointer;font-family:inherit}
 .mini-btn.copy{background:rgba(0,255,136,.08);border:1px solid var(--border);color:var(--green)}
@@ -165,7 +168,11 @@ h1.hero-title .l2{background:linear-gradient(90deg,var(--green),var(--cyan),var(
 .mini-btn.view{background:linear-gradient(90deg,var(--green),var(--cyan));color:#031007;border:none}
 .mini-btn.view:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,136,.4)}
 .repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px}
-.repo-card{background:rgba(8,14,10,.75);border:1px solid var(--border);border-radius:14px;padding:22px;transition:transform .25s,border-color .3s,opacity .5s,translate .5s;opacity:0;translate:0 24px}
+.repo-card{background:rgba(8,14,10,.75);border:1px solid var(--border);border-radius:14px;padding:0;overflow:hidden;transition:transform .25s,border-color .3s,opacity .5s,translate .5s;opacity:0;translate:0 24px}
+.repo-banner{height:148px;background:#0a0f0c;overflow:hidden}
+.repo-banner img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.repo-card:hover .repo-banner img{transform:scale(1.07)}
+.repo-body{padding:20px 22px 22px}
 .repo-card.visible{opacity:1;translate:0 0}
 .repo-card:hover{transform:translateY(-5px);border-color:var(--cyan)}
 .repo-card h4{margin-bottom:8px;font-size:1rem}
@@ -419,31 +426,31 @@ footer .visits{font-family:Consolas,monospace;font-size:.78rem;margin-top:8px;di
   <p class="sec-sub reveal" data-i18n="proj_sub">Every tool installs with a single command and runs with a short launcher. Tap copy, paste in Termux, done.</p>
   <div class="proj-grid">
     <div class="proj reveal tilt">
-      <div class="tagline">⬇ downloader</div>
+      <div class="pbanner"><img loading="lazy" src="https://i.ibb.co/9mH272PC/V4-Z-YT-Downloader-banner.jpg" alt="RASHD YT Downloader banner" onerror="this.parentNode.style.display='none'"></div><div class="tagline">⬇ downloader</div>
       <h3>RASHD YT Downloader <span class="cmd">v4zyt</span></h3>
       <p data-i18n="p1d">Multi-site video & audio downloader — YouTube, Facebook, Instagram, TikTok and 1000+ sites. MP4 / MP3 / playlist support.</p>
       <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDYTDownloaderTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDYTDownloaderTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
     </div>
     <div class="proj reveal tilt">
-      <div class="tagline">✈ telegram bot</div>
+      <div class="pbanner"><img loading="lazy" src="https://i.ibb.co/dwHYV219/V4-Z-Mega-Bot-banner.jpg" alt="RASHD Mega Bot banner" onerror="this.parentNode.style.display='none'"></div><div class="tagline">✈ telegram bot</div>
       <h3>RASHD Mega Bot <span class="cmd">v4zmegabot</span></h3>
       <p data-i18n="p2d">All-in-one Telegram bot: media downloader, Dhaka prayer times, currency → BDT, QR codes, password generator and more.</p>
       <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDMegaBotTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDMegaBotTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
     </div>
     <div class="proj reveal tilt">
-      <div class="tagline">🌐 network tool</div>
+      <div class="pbanner"><img loading="lazy" src="https://i.ibb.co/ksMcvVCy/banner.jpg" alt="RASHD IP Scanner banner" onerror="this.parentNode.style.display='none'"></div><div class="tagline">🌐 network tool</div>
       <h3>RASHD IP Scanner <span class="cmd">v4zscan</span></h3>
       <p data-i18n="p3d">Fast IP & network scanner in pure Python — domain info, CIDR range scan, quick + deep port scans. Zero pip dependencies.</p>
       <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDIPScannerTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDIPScannerTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
     </div>
     <div class="proj reveal tilt">
-      <div class="tagline">🕸 web utility</div>
+      <div class="pbanner"><img loading="lazy" src="https://files.catbox.moe/cukyf4.jpg" alt="RASHD Web Ripper banner" onerror="this.parentNode.style.display='none'"></div><div class="tagline">🕸 web utility</div>
       <h3>RASHD Web Ripper</h3>
       <p data-i18n="p4d">Download any single page or crawl a full site for offline study — assets organized, links rewritten, works offline.</p>
       <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDWebRipperTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDWebRipperTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
     </div>
     <div class="proj reveal tilt">
-      <div class="tagline">🧠 ai agent</div>
+      <div class="pbanner"><img loading="lazy" src="https://i.ibb.co/m5pPzNX7/V4-Z-Hermes-Termux-banner.jpg" alt="RASHD Hermes Agent banner" onerror="this.parentNode.style.display='none'"></div><div class="tagline">🧠 ai agent</div>
       <h3>RASHD Hermes Agent</h3>
       <p data-i18n="p5d">One-command Termux installer for the open-source Hermes AI agent (Nous Research) — with full setup guide.</p>
       <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDHermesAgentTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDHermesAgentTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
@@ -455,7 +462,7 @@ footer .visits{font-family:Consolas,monospace;font-size:.78rem;margin-top:8px;di
       <div class="row"><a class="mini-btn view" href="https://t.me/rashdteem" target="_blank" rel="noopener"><span data-i18n="p6b">Join @rashdteem →</span></a></div>
     </div>
   </div>
-  <h2 class="sec-title reveal" style="font-size:clamp(1.4rem,3.5vw,2rem)" data-i18n="repos_title">Every <span class="grad">repository</span>, live from GitHub</h2>
+  <h2 class="sec-title reveal" style="font-size:clamp(1.4rem,3.5vw,2rem)" data-i18n="repos_title">The full <span class="grad">arsenal</span></h2>
   <p class="sec-sub reveal" id="repoStatus">// fetching repositories...</p>
   <div class="repo-grid" id="repoGrid"></div>
 </section>
@@ -692,7 +699,7 @@ p4d:"Download any single page or crawl a full site for offline study — assets 
 p5d:"One-command Termux installer for the open-source Hermes AI agent (Nous Research) — with full setup guide.",
 p6t:'Next tool is <span style="background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent">cooking…</span>',
 p6d:"New ideas land on my Telegram channel first. Join to vote on what gets built next.",p6b:"Join @rashdteem →",
-copy:"⧉ Copy install",view:"View repo →",repos_title:'Every <span class="grad">repository</span>, live from GitHub',
+copy:"⧉ Copy install",view:"View repo →",repos_title:'The full <span class="grad">arsenal</span>',
 jrn_tag:"Journey",jrn_title:'The road <span class="grad">so far</span>',jrn_sub:"From zero to a one-man brand — every milestone earned on a phone screen.",
 j1t:"$ git init — the beginning",j1d:"Opened GitHub as @v4zrashd. First repos, first commits, first stars. The V4Z story starts here.",
 j2t:"$ ./first_tools --deploy",j2d:"Shipped the first Termux tools and Telegram chatbots. Learned that real users beat perfect code.",
@@ -746,7 +753,7 @@ p4d:"যেকোনো পেজ ডাউনলোড করো বা পু�
 p5d:"ওপেন-সোর্স Hermes AI এজেন্টের (Nous Research) এক-কমান্ড Termux ইনস্টলার — পুরো সেটআপ গাইডসহ।",
 p6t:'পরের টুল <span style="background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent">রান্না হচ্ছে…</span>',
 p6d:"নতুন আইডিয়া সবার আগে আমার টেলিগ্রাম চ্যানেলে আসে। পরেরটা কী বানাবো — ভোট দিতে জয়েন করো।",p6b:"@rashdteem-এ জয়েন করো →",
-copy:"⧉ কপি করো",view:"রিপো দেখো →",repos_title:'<span class="grad">সব রিপোজিটরি</span>, সরাসরি GitHub থেকে',
+copy:"⧉ কপি করো",view:"রিপো দেখো →",repos_title:'<span class="grad">সম্পূর্ণ</span> অস্ত্রাগার',
 jrn_tag:"যাত্রা",jrn_title:'এ <span class="grad">পর্যন্ত</span> পথ',jrn_sub:"শূন্য থেকে একার ব্র্যান্ড — প্রতিটা মাইলস্টোন ফোনের স্ক্রিনে অর্জিত।",
 j1t:"$ git init — শুরু",j1d:"@v4zrashd নামে GitHub খুললাম। প্রথম রিপো, প্রথম কমিট, প্রথম স্টার। V4Z গল্প এখান থেকে।",
 j2t:"$ ./first_tools --deploy",j2d:"প্রথম Termux টুল আর টেলিগ্রাম চ্যাটবট শিপ করলাম। শিখলাম — পারফেক্ট কোডের চেয়ে আসল ইউজার বড়।",
@@ -997,13 +1004,13 @@ const Music=(function(){
 })();
 
 /* ================= COPY ================= */
-document.querySelectorAll('.mini-btn.copy').forEach(b=>{
-  b.addEventListener('click',()=>{
-    SFX.pop();
-    navigator.clipboard.writeText(b.dataset.cmd).then(()=>{
-      const o=b.innerHTML; b.innerHTML='✓ Copied!'; setTimeout(()=>b.innerHTML=o,1600);
-    }).catch(()=>{b.innerHTML='Copy failed';});
-  });
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.mini-btn.copy');
+  if(!b||!b.dataset.cmd)return;
+  SFX.pop();
+  navigator.clipboard.writeText(b.dataset.cmd).then(()=>{
+    const o=b.innerHTML; b.innerHTML='✓ Copied!'; setTimeout(()=>b.innerHTML=o,1600);
+  }).catch(()=>{b.innerHTML='Copy failed';});
 });
 
 /* ================= MOBILE NAV ================= */
@@ -1021,22 +1028,70 @@ document.querySelectorAll('.mini-btn.copy').forEach(b=>{
     if(d.public_repos){sr.dataset.target=d.public_repos; sr.textContent=d.public_repos;}
     if(d.followers!=null){sf.dataset.target=d.followers; sf.textContent=d.followers;}
   }).catch(()=>{});
+/* ================= ARSENAL — shared live GitHub data ================= */
+const REPO_BAD_IMG=['shields.io','readme-typing-svg','github-readme-stats','streak-stats','top-langs','komarev','visitor-badge','profile-counter','badge.svg','count.getloli','hits.sh'];
+const REPO_SKIP=new Set(['v4zrashd.github.io','v4zrashd','rashd','rashdchm','rashd1','rashd-sms']);
+const REPO_BANNER_FIX={'RASHD-BRO':'https://raw.githubusercontent.com/v4zrashd/RASHD-BRO/main/banner.svg'};
+const FLAGSHIP=new Set(['RASHDYTDownloaderTermuxx','RASHDMegaBotTermuxx','RASHDIPScannerTermuxx','RASHDWebRipperTermuxx','RASHDHermesAgentTermuxx']);
+async function fetchRepoDetails(){
+  const rs=await(await fetch('https://api.github.com/users/v4zrashd/repos?per_page=100&sort=updated')).json();
+  const out=[];
+  for(const r of rs){
+    if(r.fork||REPO_SKIP.has(r.name))continue;
+    let imgs=[],install=null;
+    try{
+      const md=await(await fetch('https://raw.githubusercontent.com/v4zrashd/'+r.name+'/'+(r.default_branch||'main')+'/README.md')).text();
+      if(md&&md.indexOf('404: Not Found')!==0){
+        imgs=[...md.matchAll(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g)].map(m=>m[1])
+          .concat([...md.matchAll(/<img[^>]+src=["'](https?:\/\/[^"']+)["']/gi)].map(m=>m[1]))
+          .filter(u=>!REPO_BAD_IMG.some(b=>u.indexOf(b)>-1));
+        imgs=[...new Set(imgs)];
+        const im=md.match(/curl\s+-fsSL\s+(\S+?install\.sh\S*)\s*\|\s*bash/);
+        if(im)install='curl -fsSL '+im[1]+' | bash';
+      }
+    }catch(e){}
+    if(REPO_BANNER_FIX[r.name])imgs.unshift(REPO_BANNER_FIX[r.name]);
+    out.push({name:r.name,desc:r.description,lang:r.language,stars:r.stargazers_count,updated:r.updated_at,url:r.html_url,imgs:imgs,install:install});
+  }
+  return out;
+}
+let _arsenalP=null;
+function getArsenalData(){
+  if(_arsenalP)return _arsenalP;
+  _arsenalP=(async()=>{
+    const KEY='v4z_repo_cache',TTL=864e5;
+    try{const c=JSON.parse(localStorage.getItem(KEY));if(c&&Date.now()-c.ts<TTL&&c.repos&&c.repos.length)return c.repos;}catch(e){}
+    try{
+      const repos=await fetchRepoDetails();
+      if(repos&&repos.length){try{localStorage.setItem(KEY,JSON.stringify({ts:Date.now(),repos:repos}));}catch(e){}}
+      return repos;
+    }catch(e){
+      try{const c=JSON.parse(localStorage.getItem(KEY));if(c&&c.repos)return c.repos;}catch(e2){}
+      return [];
+    }
+  })();
+  return _arsenalP;
+}
   const langColors={Python:'#3572A5',JavaScript:'#f1e05a',HTML:'#e34c26',CSS:'#563d7c',Shell:'#89e051',Java:'#b07219',TypeScript:'#2b7489',Go:'#00ADD8',Dart:'#00B4AB',Kotlin:'#A97BFF',PHP:'#4F5D95'};
   const grid=document.getElementById('repoGrid'),st=document.getElementById('repoStatus');
-  fetch('https://api.github.com/users/v4zrashd/repos?per_page=100&sort=updated').then(r=>r.ok?r.json():null).then(rs=>{
-    if(!rs||!rs.length){st.textContent='// could not reach github right now';return;}
-    const list=rs.filter(r=>!r.fork);
-    st.textContent='// '+list.length+' public repositories — synced live from github';
-    grid.innerHTML=list.map((r,i)=>{
-      const c=langColors[r.language]||'#888';
-      const d=new Date(r.updated_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-      return '<div class="repo-card" style="transition-delay:'+(i*40)+'ms"><h4><a href="'+r.html_url+'" target="_blank" rel="noopener">📦 '+r.name+'</a></h4>'
-        +'<p>'+(r.description?r.description.replace(/</g,'&lt;'):'No description yet.')+'</p>'
-        +'<div class="repo-meta">'+(r.language?'<span class="lang"><span class="dot" style="background:'+c+';color:'+c+'"></span>'+r.language+'</span>':'')
-        +'<span class="stars">★ '+r.stargazers_count+'</span><span>↻ '+d+'</span></div></div>';
+  getArsenalData().then(repos=>{
+    if(!repos||!repos.length){st.textContent='// could not reach github right now';return;}
+    const rest=repos.filter(r=>!FLAGSHIP.has(r.name));
+    st.textContent='// '+repos.length+' projects live — flagship above, the rest of the arsenal below';
+    grid.innerHTML=rest.map((r,i)=>{
+      const c=langColors[r.lang]||'#888';
+      const d=new Date(r.updated).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      const banner=r.imgs.length?'<div class="repo-banner"><img loading="lazy" src="'+r.imgs[0]+'" alt="'+r.name+' banner" onerror="this.parentNode.style.display=\'none\'"></div>':'';
+      const desc=r.desc?r.desc.replace(/</g,'&lt;'):'No description yet.';
+      return '<div class="repo-card" style="transition-delay:'+(i*40)+'ms">'+banner
+        +'<div class="repo-body"><h4><a href="'+r.url+'" target="_blank" rel="noopener">📦 '+r.name+'</a></h4>'
+        +'<p>'+desc+'</p>'
+        +'<div class="repo-meta">'+(r.lang?'<span class="lang"><span class="dot" style="background:'+c+';color:'+c+'"></span>'+r.lang+'</span>':'')
+        +'<span class="stars">★ '+r.stars+'</span><span>↻ '+d+'</span></div>'
+        +'<div class="row" style="margin-top:14px">'+(r.install?'<button class="mini-btn copy" data-cmd="'+r.install+'"><span>⧉ Copy install</span></button>':'')
+        +'<a class="mini-btn view" href="'+r.url+'" target="_blank" rel="noopener"><span>View repo →</span></a></div></div></div>';
     }).join('');
     requestAnimationFrame(()=>requestAnimationFrame(()=>grid.querySelectorAll('.repo-card').forEach(x=>x.classList.add('visible'))));
-    if(window._rebindSfx)window._rebindSfx();
   }).catch(()=>{st.textContent='// could not reach github right now';});
 })();
 
@@ -1098,38 +1153,16 @@ function prettyRepo(name){
   const p=name.replace(/^RASHD/i,'').replace(/Termuxx?$/i,'').replace(/[-_]+/g,' ').trim();
   return p||name;
 }
-async function fetchGalItems(){
-  const repos=await (await fetch('https://api.github.com/users/v4zrashd/repos?per_page=100&sort=updated')).json();
-  const seen=new Set(), items=[];
-  for(const r of repos){
-    if(GAL_SKIP.includes(r.name)) continue;
-    try{
-      const md=await (await fetch(`https://raw.githubusercontent.com/v4zrashd/${r.name}/${r.default_branch||'main'}/README.md`)).text();
-      if(!md||md.startsWith('404')) continue;
-      const imgs=[...md.matchAll(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g)].map(m=>m[1])
-        .concat([...md.matchAll(/<img[^>]+src=["'](https?:\/\/[^"']+)["']/gi)].map(m=>m[1]));
-      for(const u of imgs){
-        if(GAL_BAD.some(b=>u.includes(b))||seen.has(u)) continue;
-        seen.add(u);
-        items.push({src:u,cap:prettyRepo(r.name)+' — banner'});
-      }
-    }catch(e){}
-  }
-  return items;
-}
 async function loadGallery(){
-  const KEY='v4z_gal_cache', TTL=864e5;
-  let cached=null;
-  try{ cached=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
   const full=(items)=>[...items, ...GAL_EXTRA.filter(x=>!items.some(i=>i.src===x.src)), GAL_AVATAR];
-  if(cached&&Date.now()-cached.ts<TTL&&cached.items&&cached.items.length) renderGallery(full(cached.items));
-  try{
-    const items=await fetchGalItems();
-    if(items.length){
-      try{ localStorage.setItem(KEY,JSON.stringify({ts:Date.now(),items})); }catch(e){}
-      renderGallery(full(items));
-    }else if(!cached) renderGallery(full([]));
-  }catch(e){ if(!cached) renderGallery(full([])); }
+  let repos=[];
+  try{ repos=await getArsenalData(); }catch(e){}
+  const seen=new Set(),items=[];
+  for(const r of repos)for(const u of r.imgs){
+    if(seen.has(u))continue; seen.add(u);
+    items.push({src:u,cap:prettyRepo(r.name)+' — banner'});
+  }
+  renderGallery(full(items));
 }
 
 /* ================= GALLERY LIGHTBOX ================= */
