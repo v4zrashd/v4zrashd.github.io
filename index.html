@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V4Z RASHD — Portfolio</title>
+<meta name="description" content="V4Z RASHD — Termux Tool Developer & Telegram Bot Maker. Original Termux tools, Telegram bots and Android projects.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2304070a'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='24' font-weight='bold' fill='%2300ff88' text-anchor='middle'%3EV4Z%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#04070a; --green:#00ff88; --cyan:#00e5ff; --purple:#b366ff; --pink:#ff4ecd;
+  --text:#eaf6f0; --muted:#8ba398;
+  --card:rgba(12,20,16,.66); --border:rgba(0,255,136,.16);
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,'Noto Sans Bengali',Roboto,Arial,sans-serif;overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#060a08}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--green),var(--cyan));border-radius:8px}
+::selection{background:var(--green);color:#000}
+
+#cursor{position:fixed;width:26px;height:26px;border:2px solid var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:screen;box-shadow:0 0 18px rgba(0,255,136,.5);display:none}
+#cursor.big{width:56px;height:56px;background:rgba(0,255,136,.12)}
+@media(pointer:fine){#cursor{display:block}}
+
+#loader{position:fixed;inset:0;background:var(--bg);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .6s,visibility .6s}
+#loader.done{opacity:0;visibility:hidden}
+#loader .logo{font-size:clamp(1.6rem,6vw,2.6rem);font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradShift 2.5s linear infinite}
+@keyframes gradShift{to{background-position:200%}}
+#loader .bar{width:230px;height:4px;background:#0e1a12;border-radius:4px;overflow:hidden}
+#loader .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));animation:load 1.3s ease forwards}
+@keyframes load{to{width:100%}}
+#loader .pct{color:var(--muted);font-size:.8rem;font-family:Consolas,monospace}
+
+#bg{position:fixed;inset:0;z-index:-3}
+.grid-overlay{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(0,255,136,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.045) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 75%);
+          mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 30%,transparent 75%);}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);z-index:-1;opacity:.32;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+.orb.o1{width:460px;height:460px;background:#00ff88;top:-140px;left:-140px}
+.orb.o2{width:420px;height:420px;background:#0090ff;bottom:-120px;right:-120px;animation-delay:-7s}
+.orb.o3{width:320px;height:320px;background:#b366ff;top:45%;left:62%;opacity:.2;animation-delay:-12s}
+@keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple));z-index:1001;box-shadow:0 0 12px var(--green)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:12px 4vw;background:rgba(4,7,10,.62);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+nav .brand{font-weight:900;font-size:1.2rem;letter-spacing:2px;text-decoration:none;color:var(--text);white-space:nowrap}
+nav .brand b{background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav .links{display:flex;gap:16px;align-items:center}
+nav .links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600;position:relative;transition:color .25s;white-space:nowrap}
+nav .links a::after{content:'';position:absolute;left:0;bottom:-6px;height:2px;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
+nav .links a:hover{color:var(--green)} nav .links a:hover::after{width:100%}
+#langBtn{background:rgba(0,255,136,.08);border:1px solid var(--border);color:var(--green);border-radius:20px;padding:5px 14px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+#langBtn:hover{background:var(--green);color:#031007}
+#menuBtn{display:none;background:none;border:1px solid var(--border);color:var(--green);font-size:1.4rem;border-radius:10px;padding:4px 12px;cursor:pointer}
+@media(max-width:1080px){
+  nav .links{position:fixed;top:60px;right:4vw;flex-direction:column;align-items:stretch;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 22px;display:none;backdrop-filter:blur(14px);gap:12px}
+  nav .links.open{display:flex}
+  #menuBtn{display:block}
+}
+
+section{padding:100px 6vw;max-width:1220px;margin:0 auto;position:relative}
+.sec-num{font-family:Consolas,monospace;color:#2a4a35;font-size:.85rem;letter-spacing:3px}
+.sec-tag{display:inline-block;font-size:.78rem;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin:8px 0 12px;border:1px solid var(--border);padding:6px 16px;border-radius:30px;background:rgba(0,255,136,.06)}
+.sec-title{font-size:clamp(1.9rem,4.5vw,2.9rem);font-weight:800;margin-bottom:14px;letter-spacing:-.5px}
+.sec-title .grad{background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-sub{color:var(--muted);max-width:640px;margin-bottom:44px}
+
+.reveal{opacity:0;transform:translateY(46px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal-l{transform:translateX(-60px)} .reveal-r{transform:translateX(60px)} .reveal-s{transform:scale(.9)}
+.reveal.visible{opacity:1;transform:none}
+
+/* HERO */
+#home{min-height:100vh;display:flex;align-items:center;padding-top:120px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:50px;align-items:center;width:100%}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;text-align:center}.hero-btns,.hero-stats{justify-content:center}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;color:var(--green);border:1px solid var(--border);border-radius:30px;padding:8px 18px;margin-bottom:22px;background:rgba(0,255,136,.05)}
+.hero-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1.hero-title{font-size:clamp(2.8rem,8.5vw,5.4rem);font-weight:900;line-height:1.02;letter-spacing:-1px;margin-bottom:6px}
+h1.hero-title .l1{color:var(--text);text-shadow:0 0 40px rgba(0,255,136,.25)}
+h1.hero-title .l2{background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple),var(--green));background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradShift 6s linear infinite;filter:drop-shadow(0 0 26px rgba(0,229,255,.3))}
+.type-line{font-size:clamp(1.05rem,3.2vw,1.5rem);color:var(--muted);margin:16px 0 6px;min-height:2.1em;font-family:Consolas,monospace}
+.type-line .gt{color:var(--green)}
+.type-line .cursor{display:inline-block;width:3px;height:1.1em;background:var(--green);vertical-align:-2px;animation:blink .8s steps(1) infinite;margin-left:3px;box-shadow:0 0 8px var(--green)}
+@keyframes blink{50%{opacity:0}}
+.hero-desc{color:var(--muted);max-width:560px;margin:12px 0 32px}
+@media(max-width:900px){.hero-desc{margin-left:auto;margin-right:auto}}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn{display:inline-block;padding:15px 36px;border-radius:40px;font-weight:700;text-decoration:none;transition:transform .25s,box-shadow .25s;cursor:pointer;border:none;font-size:1rem}
+.btn-primary{background:linear-gradient(90deg,var(--green),var(--cyan));color:#031007;box-shadow:0 8px 32px rgba(0,255,136,.35)}
+.btn-primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 46px rgba(0,255,136,.55)}
+.btn-ghost{border:1px solid var(--border);color:var(--green);background:rgba(0,255,136,.05);backdrop-filter:blur(6px)}
+.btn-ghost:hover{transform:translateY(-3px);background:rgba(0,255,136,.13);box-shadow:0 10px 30px rgba(0,255,136,.15)}
+.hero-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:46px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 26px;min-width:132px;backdrop-filter:blur(10px);transition:transform .3s,border-color .3s;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));opacity:0;transition:opacity .3s}
+.stat:hover{transform:translateY(-5px);border-color:var(--green)} .stat:hover::after{opacity:1}
+.stat .num{font-size:1.9rem;font-weight:900;background:linear-gradient(180deg,#fff,var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .lbl{font-size:.83rem;color:var(--muted)}
+.profile-card{position:relative;justify-self:center;width:min(340px,80vw);perspective:1000px}
+.pc-inner{position:relative;border-radius:24px;padding:3px;background:linear-gradient(135deg,var(--green),var(--cyan),var(--purple),var(--pink));background-size:300%;animation:gradShift 8s linear infinite;transform-style:preserve-3d;transition:transform .25s ease-out;box-shadow:0 30px 80px rgba(0,255,136,.18)}
+.pc-inner img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:21px;display:block}
+.pc-glass{position:absolute;inset:3px;border-radius:21px;background:linear-gradient(135deg,rgba(255,255,255,.14),transparent 40%);pointer-events:none}
+.pc-name{position:absolute;left:20px;right:20px;bottom:22px;background:rgba(3,8,6,.72);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:14px;padding:12px 18px;transform:translateZ(50px)}
+.pc-name b{font-size:1.1rem;letter-spacing:1px}
+.pc-name b span{color:var(--green)}
+.pc-name small{color:var(--muted);display:block;font-size:.78rem}
+.float-chip{position:absolute;background:rgba(6,12,9,.85);border:1px solid var(--border);border-radius:30px;padding:8px 18px;font-size:.82rem;font-weight:700;backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,.4);animation:floaty 4s ease-in-out infinite;white-space:nowrap;z-index:2}
+.float-chip.c1{top:-18px;left:-24px;color:var(--green)}
+.float-chip.c2{bottom:70px;right:-30px;color:var(--cyan);animation-delay:-2s}
+@keyframes floaty{50%{transform:translateY(-12px)}}
+@media(max-width:900px){.float-chip.c1{left:-6px}.float-chip.c2{right:-6px}}
+
+/* MARQUEE */
+.marquee{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(0,255,136,.03);padding:16px 0}
+.marquee-track{display:flex;width:max-content;animation:mq 26s linear infinite}
+.marquee span{font-family:Consolas,monospace;font-size:.95rem;letter-spacing:3px;color:var(--muted);padding:0 28px;white-space:nowrap}
+.marquee span b{color:var(--green)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:stretch}
+@media(max-width:860px){.about-grid{grid-template-columns:1fr}}
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px;backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.about-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple))}
+.about-card p{color:var(--muted);margin-bottom:14px}
+.about-card p b{color:var(--text)}
+.about-card p .hl{color:var(--green);font-weight:700}
+.fact-list{list-style:none;margin-top:6px}
+.fact-list li{padding:10px 0;border-bottom:1px dashed rgba(0,255,136,.12);color:var(--muted);font-size:.93rem;display:flex;gap:12px}
+.fact-list li:last-child{border:none}
+.fact-list li .k{color:var(--cyan);font-family:Consolas,monospace;min-width:110px}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;backdrop-filter:blur(12px);transition:transform .3s,border-color .3s,box-shadow .3s}
+.skill-card:hover{transform:translateY(-6px);border-color:var(--green);box-shadow:0 18px 44px rgba(0,255,136,.1)}
+.skill-card h3{font-size:1.08rem;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.skill-card h3 .ico{font-size:1.35rem;filter:drop-shadow(0 0 8px rgba(0,255,136,.5))}
+.skill-card p{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+.bar{height:8px;background:#0d1610;border-radius:6px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--green),var(--cyan));box-shadow:0 0 10px rgba(0,255,136,.6);transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.bar-lbl{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:6px}
+.bar-lbl b{color:var(--green)}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-bottom:64px}
+.proj{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;backdrop-filter:blur(12px);display:flex;flex-direction:column;transition:transform .25s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden;transform-style:preserve-3d}
+.proj::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple));opacity:0;transition:opacity .3s}
+.proj:hover{border-color:rgba(0,255,136,.5);box-shadow:0 24px 60px rgba(0,255,136,.12)}
+.proj:hover::before{opacity:1}
+.proj .tagline{font-size:.72rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:10px;font-family:Consolas,monospace}
+.proj h3{font-size:1.22rem;margin-bottom:10px}
+.proj h3 .cmd{color:var(--green);font-family:Consolas,monospace;font-size:1rem;background:rgba(0,255,136,.08);border:1px solid var(--border);padding:2px 10px;border-radius:8px}
+.proj p{color:var(--muted);font-size:.92rem;flex:1;margin-bottom:18px}
+.proj .row{display:flex;gap:10px;flex-wrap:wrap}
+.mini-btn{padding:10px 20px;border-radius:30px;font-size:.85rem;font-weight:700;text-decoration:none;transition:all .2s;cursor:pointer;font-family:inherit}
+.mini-btn.copy{background:rgba(0,255,136,.08);border:1px solid var(--border);color:var(--green)}
+.mini-btn.copy:hover{background:var(--green);color:#031007;transform:translateY(-2px)}
+.mini-btn.view{background:linear-gradient(90deg,var(--green),var(--cyan));color:#031007;border:none}
+.mini-btn.view:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,136,.4)}
+.repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px}
+.repo-card{background:rgba(8,14,10,.75);border:1px solid var(--border);border-radius:14px;padding:22px;transition:transform .25s,border-color .3s,opacity .5s,translate .5s;opacity:0;translate:0 24px}
+.repo-card.visible{opacity:1;translate:0 0}
+.repo-card:hover{transform:translateY(-5px);border-color:var(--cyan)}
+.repo-card h4{margin-bottom:8px;font-size:1rem}
+.repo-card h4 a{color:var(--text);text-decoration:none;transition:color .2s}
+.repo-card h4 a:hover{color:var(--green)}
+.repo-card p{color:var(--muted);font-size:.85rem;min-height:2.6em;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.repo-meta{display:flex;align-items:center;gap:14px;font-size:.78rem;color:var(--muted);font-family:Consolas,monospace}
+.repo-meta .lang{display:flex;align-items:center;gap:6px}
+.repo-meta .dot{width:10px;height:10px;border-radius:50%;background:#888;box-shadow:0 0 6px currentColor}
+.repo-meta .stars{color:#ffd76a}
+#repoStatus{color:var(--muted);font-size:.88rem;font-family:Consolas,monospace}
+
+/* JOURNEY */
+.timeline{position:relative;max-width:760px;margin:0 auto;padding-left:34px}
+.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--green),var(--cyan),var(--purple))}
+.tl-item{position:relative;margin-bottom:34px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 26px;backdrop-filter:blur(10px);transition:transform .3s,border-color .3s}
+.tl-item:hover{transform:translateX(6px);border-color:var(--green)}
+.tl-item::before{content:'';position:absolute;left:-31px;top:26px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--green);box-shadow:0 0 12px var(--green)}
+.tl-item.future::before{border-color:var(--purple);box-shadow:0 0 12px var(--purple)}
+.tl-item .date{font-family:Consolas,monospace;font-size:.78rem;color:var(--cyan);letter-spacing:2px}
+.tl-item h3{margin:6px 0;font-size:1.1rem}
+.tl-item p{color:var(--muted);font-size:.92rem}
+
+/* BLOG */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:22px}
+.blog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:30px;backdrop-filter:blur(12px);display:flex;flex-direction:column;transition:transform .3s,border-color .3s,box-shadow .3s;cursor:pointer}
+.blog-card:hover{transform:translateY(-6px);border-color:var(--cyan);box-shadow:0 18px 44px rgba(0,229,255,.1)}
+.blog-card .bdate{font-family:Consolas,monospace;font-size:.75rem;color:var(--cyan);letter-spacing:2px;margin-bottom:10px}
+.blog-card h3{font-size:1.15rem;margin-bottom:10px;line-height:1.4}
+.blog-card p{color:var(--muted);font-size:.9rem;flex:1;margin-bottom:16px}
+.blog-card .read{color:var(--green);font-weight:700;font-size:.9rem}
+#blogModal{position:fixed;inset:0;z-index:2000;background:rgba(2,5,3,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:5vw}
+#blogModal.open{display:flex}
+.blog-modal-box{background:#070d09;border:1px solid var(--border);border-radius:20px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;padding:40px;position:relative}
+.blog-modal-box h2{margin-bottom:8px;font-size:1.5rem}
+.blog-modal-box .bdate{font-family:Consolas,monospace;font-size:.78rem;color:var(--cyan);letter-spacing:2px;margin-bottom:18px;display:block}
+.blog-modal-box p{color:var(--muted);margin-bottom:14px}
+.blog-modal-box p b,.blog-modal-box p code{color:var(--green)}
+.blog-modal-box code{font-family:Consolas,monospace;background:rgba(0,255,136,.08);padding:2px 8px;border-radius:6px;font-size:.88em}
+#blogClose{position:absolute;top:16px;right:18px;background:none;border:1px solid var(--border);color:var(--green);border-radius:50%;width:38px;height:38px;font-size:1.1rem;cursor:pointer}
+#blogClose:hover{background:var(--green);color:#000}
+
+/* GALLERY */
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.gal-item{border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;aspect-ratio:16/10;background:#0a0f0c;transition:transform .3s,border-color .3s,box-shadow .3s}
+.gal-item:hover{transform:scale(1.03);border-color:var(--green);box-shadow:0 14px 40px rgba(0,255,136,.15)}
+.gal-item img{width:100%;height:100%;object-fit:cover;display:block}
+.gal-item .cap{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;font-size:.8rem;background:linear-gradient(transparent,rgba(0,0,0,.85));color:var(--text)}
+#lightbox{position:fixed;inset:0;z-index:2000;background:rgba(2,5,3,.92);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:4vw}
+#lightbox.open{display:flex}
+#lightbox img{max-width:92vw;max-height:84vh;border-radius:12px;border:1px solid var(--border);box-shadow:0 30px 90px rgba(0,255,136,.2)}
+#lbClose{position:absolute;top:20px;right:24px;background:none;border:1px solid var(--border);color:var(--green);border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer}
+#lbClose:hover{background:var(--green);color:#000}
+#lbPrev,#lbNext{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);border:1px solid var(--border);color:var(--green);border-radius:50%;width:48px;height:48px;font-size:1.3rem;cursor:pointer}
+#lbPrev{left:18px}#lbNext{right:18px}
+#lbPrev:hover,#lbNext:hover{background:var(--green);color:#000}
+
+/* TESTIMONIALS */
+.testi-wrap{max-width:720px;margin:0 auto;position:relative}
+.testi{overflow:hidden;border-radius:var(--radius)}
+.testi-track{display:flex;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.testi-card{min-width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:44px 38px;backdrop-filter:blur(12px);text-align:center}
+.testi-card .stars{color:#ffd76a;font-size:1.2rem;letter-spacing:4px;margin-bottom:14px}
+.testi-card p{font-size:1.05rem;color:var(--text);font-style:italic;margin-bottom:18px;line-height:1.7}
+.testi-card .who{color:var(--cyan);font-family:Consolas,monospace;font-size:.88rem}
+.testi-dots{display:flex;gap:10px;justify-content:center;margin-top:20px}
+.testi-dots button{width:12px;height:12px;border-radius:50%;border:1px solid var(--green);background:transparent;cursor:pointer;padding:0}
+.testi-dots button.active{background:var(--green);box-shadow:0 0 10px var(--green)}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.svc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:34px 30px;backdrop-filter:blur(12px);display:flex;flex-direction:column;transition:transform .3s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.svc:hover{transform:translateY(-8px);border-color:var(--purple);box-shadow:0 22px 54px rgba(179,102,255,.14)}
+.svc .sico{font-size:2.2rem;margin-bottom:14px;filter:drop-shadow(0 0 12px rgba(179,102,255,.6))}
+.svc h3{font-size:1.25rem;margin-bottom:10px}
+.svc ul{list-style:none;margin-bottom:20px;flex:1}
+.svc ul li{color:var(--muted);font-size:.9rem;padding:7px 0;border-bottom:1px dashed rgba(0,255,136,.1);display:flex;gap:10px}
+.svc ul li::before{content:'✓';color:var(--green);font-weight:bold}
+.svc .price{font-family:Consolas,monospace;color:var(--amber);font-size:.9rem;margin-bottom:18px}
+
+/* SOCIAL */
+.social-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px}
+.soc{display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 16px;text-decoration:none;color:var(--text);backdrop-filter:blur(12px);transition:transform .25s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.soc::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,255,136,.14),transparent 65%);opacity:0;transition:opacity .3s}
+.soc:hover{transform:translateY(-8px);border-color:var(--green);box-shadow:0 18px 46px rgba(0,255,136,.16)}
+.soc:hover::after{opacity:1}
+.soc svg{width:44px;height:44px;fill:var(--green);transition:all .3s;filter:drop-shadow(0 0 10px rgba(0,255,136,.4))}
+.soc:hover svg{fill:var(--cyan);transform:scale(1.12);filter:drop-shadow(0 0 14px rgba(0,229,255,.6))}
+.soc .name{font-weight:800;letter-spacing:.5px}
+.soc .handle{font-size:.8rem;color:var(--muted);font-family:Consolas,monospace}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:980px;margin:0 auto}
+@media(max-width:860px){.contact-grid{grid-template-columns:1fr}}
+.contact-box{background:var(--card);border:1px solid var(--border);border-radius:28px;padding:52px 34px;backdrop-filter:blur(14px);position:relative;overflow:hidden;text-align:center}
+.contact-box::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:420px;height:160px;background:radial-gradient(ellipse,rgba(0,255,136,.22),transparent);filter:blur(12px)}
+.contact-box h2{font-size:clamp(1.6rem,4vw,2.2rem);margin-bottom:12px;position:relative}
+.contact-box h2 .grad{background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.contact-box p{color:var(--muted);margin-bottom:28px;position:relative}
+.form-box{background:var(--card);border:1px solid var(--border);border-radius:28px;padding:40px 34px;backdrop-filter:blur(14px)}
+.form-box h3{margin-bottom:6px;font-size:1.25rem}
+.form-box .fnote{color:var(--muted);font-size:.85rem;margin-bottom:22px}
+.form-box label{display:block;color:var(--muted);font-size:.82rem;margin:14px 0 6px;letter-spacing:1px}
+.form-box input,.form-box textarea{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:13px 16px;font-family:inherit;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s;resize:vertical}
+.form-box input:focus,.form-box textarea:focus{border-color:var(--green);box-shadow:0 0 14px rgba(0,255,136,.15)}
+.form-box button{margin-top:20px;width:100%}
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:#0a140d;border:1px solid var(--green);color:var(--green);padding:14px 26px;border-radius:30px;font-size:.9rem;z-index:3000;opacity:0;pointer-events:none;transition:all .35s;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{text-align:center;padding:36px 6vw;color:var(--muted);font-size:.88rem;border-top:1px solid var(--border)}
+footer b{background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+footer .visits{font-family:Consolas,monospace;font-size:.78rem;margin-top:8px;display:block}
+
+/* floating buttons */
+.fab{position:fixed;width:52px;height:52px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--green);font-size:1.25rem;cursor:pointer;backdrop-filter:blur(8px);z-index:1000;transition:transform .25s,box-shadow .25s;display:flex;align-items:center;justify-content:center}
+.fab:hover{transform:scale(1.1);box-shadow:0 8px 24px rgba(0,255,136,.3)}
+#topBtn{bottom:26px;right:26px;display:none}
+#chatBtn{bottom:92px;right:26px}
+#soundBtn{bottom:26px;left:26px}
+#soundBtn.off,#musicBtn.off{color:var(--muted)}
+#musicBtn{bottom:92px;left:26px}
+
+/* chatbot */
+#chatPanel{position:fixed;bottom:158px;right:26px;width:min(340px,calc(100vw - 52px));height:440px;max-height:60vh;background:#070d09;border:1px solid var(--border);border-radius:20px;z-index:1500;display:none;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+#chatPanel.open{display:flex}
+#chatPanel .chead{background:linear-gradient(90deg,rgba(0,255,136,.15),rgba(0,229,255,.1));padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+#chatPanel .chead b{font-size:.95rem}
+#chatPanel .chead b span{color:var(--green)}
+#chatClose{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
+#chatMsgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:10px 14px;border-radius:14px;font-size:.88rem;line-height:1.5}
+.msg.bot{background:rgba(0,255,136,.08);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{background:linear-gradient(90deg,var(--green),var(--cyan));color:#031007;align-self:flex-end;border-bottom-right-radius:4px;font-weight:600}
+.msg.bot a{color:var(--cyan)}
+#chatForm{display:flex;border-top:1px solid var(--border)}
+#chatForm input{flex:1;background:transparent;border:none;color:var(--text);padding:14px 16px;font-family:inherit;font-size:.9rem;outline:none}
+#chatForm button{background:var(--green);border:none;color:#031007;font-weight:800;padding:0 20px;cursor:pointer;font-size:1.1rem}
+.typing-dots span{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:4px;animation:tblink 1s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes tblink{50%{opacity:.2}}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="loader"><div class="logo">V4Z RASHD</div><div class="bar"><span></span></div><div class="pct" id="loadPct">0%</div></div>
+<canvas id="bg"></canvas>
+<div class="grid-overlay"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div id="progress"></div>
+
+<nav>
+  <a class="brand" href="#home"><b>V4Z</b> RASHD</a>
+  <button id="menuBtn" aria-label="Menu">☰</button>
+  <div class="links" id="navLinks">
+    <a href="#home" data-i18n="nav_home">Home</a>
+    <a href="#about" data-i18n="nav_about">About</a>
+    <a href="#skills" data-i18n="nav_skills">Skills</a>
+    <a href="#projects" data-i18n="nav_projects">Projects</a>
+    <a href="#journey" data-i18n="nav_journey">Journey</a>
+    <a href="#blog" data-i18n="nav_blog">Blog</a>
+    <a href="#gallery" data-i18n="nav_gallery">Gallery</a>
+    <a href="#services" data-i18n="nav_services">Services</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+    <button id="langBtn">বাংলা</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-badge reveal visible"><span class="dot"></span> <span data-i18n="hero_badge">Available for new ideas & collabs</span></div>
+      <h1 class="hero-title reveal visible"><span class="l1">V4Z</span><br><span class="l2">RASHD</span></h1>
+      <div class="type-line reveal visible"><span class="gt">&gt;</span> <span id="typed"></span><span class="cursor"></span></div>
+      <p class="hero-desc reveal visible" data-i18n="hero_desc">I craft original, mobile-first tools for Termux & Android — downloaders, Telegram bots, network utilities. One install command. Zero bloat. Built with obsession for the small screen.</p>
+      <div class="hero-btns reveal visible">
+        <a class="btn btn-primary magnetic" href="#projects" data-i18n="btn_projects">Explore Projects</a>
+        <a class="btn btn-ghost magnetic" href="#contact" data-i18n="btn_contact">Connect With Me</a>
+      </div>
+      <div class="hero-stats reveal visible">
+        <div class="stat"><div class="num" data-count id="statRepos" data-target="13">0</div><div class="lbl" data-i18n="stat_repos">Public Repos</div></div>
+        <div class="stat"><div class="num" data-count id="statFollowers" data-target="11">0</div><div class="lbl" data-i18n="stat_followers">GitHub Followers</div></div>
+        <div class="stat"><div class="num" data-count data-target="5">0</div><div class="lbl" data-i18n="stat_tools">Termux Tools</div></div>
+        <div class="stat"><div class="num"><span data-count data-target="100">0</span>%</div><div class="lbl" data-i18n="stat_original">Original Code</div></div>
+      </div>
+    </div>
+    <div class="profile-card reveal visible reveal-s">
+      <div class="float-chip c1">🐧 termux dev</div>
+      <div class="float-chip c2">🤖 bot maker</div>
+      <div class="pc-inner" id="tiltCard">
+        <img src="https://github.com/v4zrashd.png" alt="V4Z RASHD" onerror="this.style.display='none'">
+        <div class="pc-glass"></div>
+        <div class="pc-name"><b>V4Z <span>RASHD</span></b><small>@v4zrashd • bangladesh</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee"><div class="marquee-track" id="mqTrack">
+  <span><b>◆</b> TERMUX TOOLS</span><span><b>◆</b> TELEGRAM BOTS</span><span><b>◆</b> PYTHON</span><span><b>◆</b> ANDROID</span><span><b>◆</b> OPEN SOURCE</span><span><b>◆</b> 100% ORIGINAL</span>
+</div></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-num reveal">01 // WHOAMI</div>
+  <span class="sec-tag reveal" data-i18n="about_tag">About Me</span>
+  <h2 class="sec-title reveal" data-i18n="about_title">Developer by <span class="grad">passion</span>,<br>hacker by <span class="grad">curiosity</span></h2>
+  <p class="sec-sub reveal" data-i18n="about_sub">A young developer from Bangladesh building a one-man brand — V4Z RASHD — across Termux tooling, Telegram bots and short-form content.</p>
+  <div class="about-grid">
+    <div class="about-card reveal reveal-l">
+      <p data-i18n="about_p1"><b>Rashed</b>, known online as <span class="hl">V4Z RASHD</span> — I design and ship tools that run right on your phone. No heavy setup, no desktop needed: one install command and you are running.</p>
+      <p data-i18n="about_p2">My projects focus on <b>real utility</b>: downloading media, automating Telegram, scanning networks, ripping websites for offline study — all open source on GitHub.</p>
+      <p data-i18n="about_p3">When I'm not coding, I'm making content on <b>TikTok & YouTube</b> and growing my Telegram channel <span class="hl">@rashdteem</span>.</p>
+    </div>
+    <div class="about-card reveal reveal-r">
+      <ul class="fact-list">
+        <li><span class="k">handle</span> @v4zrashd everywhere</li>
+        <li><span class="k">stack</span> python • shell • js • termux</li>
+        <li><span class="k">editor</span> <span data-i18n="fact_editor">phone + termux, mostly</span></li>
+        <li><span class="k">channel</span> t.me/rashdteem</li>
+        <li><span class="k">status</span> <span style="color:var(--green)">● <span data-i18n="fact_status">shipping while you sleep</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-num reveal">02 // ARSENAL</div>
+  <span class="sec-tag reveal" data-i18n="skills_tag">Skills</span>
+  <h2 class="sec-title reveal" data-i18n="skills_title">What I <span class="grad">do best</span></h2>
+  <p class="sec-sub reveal" data-i18n="skills_sub">Battle-tested on real devices, in real Termux sessions — not just theory.</p>
+  <div class="skills-grid">
+    <div class="skill-card reveal"><h3><span class="ico">🐧</span> <span data-i18n="sk1t">Termux Tool Development</span></h3><p data-i18n="sk1d">One-command installers, launchers and CLI tools built for Android terminals.</p><div class="bar-lbl"><span data-i18n="prof">Proficiency</span><b>95%</b></div><div class="bar"><span data-w="95%"></span></div></div>
+    <div class="skill-card reveal"><h3><span class="ico">🤖</span> <span data-i18n="sk2t">Telegram Bots</span></h3><p data-i18n="sk2d">Async Python bots — downloaders, utilities, menus, APIs — running 24/7.</p><div class="bar-lbl"><span data-i18n="prof">Proficiency</span><b>90%</b></div><div class="bar"><span data-w="90%"></span></div></div>
+    <div class="skill-card reveal"><h3><span class="ico">🐍</span> Python</h3><p data-i18n="sk3d">Threading, networking, APIs, automation — stdlib-first, dependency-light.</p><div class="bar-lbl"><span data-i18n="prof">Proficiency</span><b>88%</b></div><div class="bar"><span data-w="88%"></span></div></div>
+    <div class="skill-card reveal"><h3><span class="ico">🌐</span> HTML / CSS / JS</h3><p data-i18n="sk4d">Modern animated sites and WebView apps — like this page, and 3D games.</p><div class="bar-lbl"><span data-i18n="prof">Proficiency</span><b>85%</b></div><div class="bar"><span data-w="85%"></span></div></div>
+    <div class="skill-card reveal"><h3><span class="ico">📱</span> <span data-i18n="sk5t">Android / APK</span></h3><p data-i18n="sk5d">Packaging web apps into installable APKs with custom icons and branding.</p><div class="bar-lbl"><span data-i18n="prof">Proficiency</span><b>80%</b></div><div class="bar"><span data-w="80%"></span></div></div>
+    <div class="skill-card reveal"><h3><span class="ico">🎬</span> <span data-i18n="sk6t">Content Creation</span></h3><p data-i18n="sk6d">Short-form video on TikTok & YouTube — tutorials, tool demos, promos.</p><div class="bar-lbl"><span data-i18n="prof">Proficiency</span><b>82%</b></div><div class="bar"><span data-w="82%"></span></div></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-num reveal">03 // PAYLOADS</div>
+  <span class="sec-tag reveal" data-i18n="proj_tag">Projects</span>
+  <h2 class="sec-title reveal" data-i18n="proj_title">Termux <span class="grad">arsenal</span></h2>
+  <p class="sec-sub reveal" data-i18n="proj_sub">Every tool installs with a single command and runs with a short launcher. Tap copy, paste in Termux, done.</p>
+  <div class="proj-grid">
+    <div class="proj reveal tilt">
+      <div class="tagline">⬇ downloader</div>
+      <h3>RASHD YT Downloader <span class="cmd">v4zyt</span></h3>
+      <p data-i18n="p1d">Multi-site video & audio downloader — YouTube, Facebook, Instagram, TikTok and 1000+ sites. MP4 / MP3 / playlist support.</p>
+      <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDYTDownloaderTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDYTDownloaderTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
+    </div>
+    <div class="proj reveal tilt">
+      <div class="tagline">✈ telegram bot</div>
+      <h3>RASHD Mega Bot <span class="cmd">v4zmegabot</span></h3>
+      <p data-i18n="p2d">All-in-one Telegram bot: media downloader, Dhaka prayer times, currency → BDT, QR codes, password generator and more.</p>
+      <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDMegaBotTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDMegaBotTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
+    </div>
+    <div class="proj reveal tilt">
+      <div class="tagline">🌐 network tool</div>
+      <h3>RASHD IP Scanner <span class="cmd">v4zscan</span></h3>
+      <p data-i18n="p3d">Fast IP & network scanner in pure Python — domain info, CIDR range scan, quick + deep port scans. Zero pip dependencies.</p>
+      <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDIPScannerTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDIPScannerTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
+    </div>
+    <div class="proj reveal tilt">
+      <div class="tagline">🕸 web utility</div>
+      <h3>RASHD Web Ripper</h3>
+      <p data-i18n="p4d">Download any single page or crawl a full site for offline study — assets organized, links rewritten, works offline.</p>
+      <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDWebRipperTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDWebRipperTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
+    </div>
+    <div class="proj reveal tilt">
+      <div class="tagline">🧠 ai agent</div>
+      <h3>RASHD Hermes Agent</h3>
+      <p data-i18n="p5d">One-command Termux installer for the open-source Hermes AI agent (Nous Research) — with full setup guide.</p>
+      <div class="row"><button class="mini-btn copy" data-cmd="curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDHermesAgentTermuxx/main/install.sh | bash"><span data-i18n="copy">⧉ Copy install</span></button><a class="mini-btn view" href="https://github.com/v4zrashd/RASHDHermesAgentTermuxx" target="_blank" rel="noopener"><span data-i18n="view">View repo →</span></a></div>
+    </div>
+    <div class="proj reveal tilt reveal-s">
+      <div class="tagline">⏳ more coming</div>
+      <h3 data-i18n="p6t">Next tool is <span style="background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent">cooking…</span></h3>
+      <p data-i18n="p6d">New ideas land on my Telegram channel first. Join to vote on what gets built next.</p>
+      <div class="row"><a class="mini-btn view" href="https://t.me/rashdteem" target="_blank" rel="noopener"><span data-i18n="p6b">Join @rashdteem →</span></a></div>
+    </div>
+  </div>
+  <h2 class="sec-title reveal" style="font-size:clamp(1.4rem,3.5vw,2rem)" data-i18n="repos_title">Every <span class="grad">repository</span>, live from GitHub</h2>
+  <p class="sec-sub reveal" id="repoStatus">// fetching repositories...</p>
+  <div class="repo-grid" id="repoGrid"></div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="sec-num reveal">04 // LOG</div>
+  <span class="sec-tag reveal" data-i18n="jrn_tag">Journey</span>
+  <h2 class="sec-title reveal" data-i18n="jrn_title">The road <span class="grad">so far</span></h2>
+  <p class="sec-sub reveal" data-i18n="jrn_sub">From zero to a one-man brand — every milestone earned on a phone screen.</p>
+  <div class="timeline">
+    <div class="tl-item reveal"><div class="date">2026-06</div><h3 data-i18n="j1t">$ git init — the beginning</h3><p data-i18n="j1d">Opened GitHub as @v4zrashd. First repos, first commits, first stars. The V4Z story starts here.</p></div>
+    <div class="tl-item reveal"><div class="date">2026-09</div><h3 data-i18n="j2t">$ ./first_tools --deploy</h3><p data-i18n="j2d">Shipped the first Termux tools and Telegram chatbots. Learned that real users beat perfect code.</p></div>
+    <div class="tl-item reveal"><div class="date">2026-10</div><h3 data-i18n="j3t">$ v4z_brand --launch</h3><p data-i18n="j3d">The V4Z arsenal drops: YT Downloader, Mega Bot, IP Scanner, Web Ripper, Hermes Agent — all original, all one-command installs.</p></div>
+    <div class="tl-item reveal"><div class="date">2026-10</div><h3 data-i18n="j4t">$ broadcast --channel</h3><p data-i18n="j4d">Launched the Telegram channel @rashdteem — the HQ for every release, poll and update.</p></div>
+    <div class="tl-item reveal"><div class="date">2026-10</div><h3 data-i18n="j5t">$ deploy portfolio --live</h3><p data-i18n="j5d">This personal site goes live — one HTML file, Three.js particles, and everything I am.</p></div>
+    <div class="tl-item future reveal"><div class="date">????-??</div><h3 data-i18n="j6t">$ next --unknown</h3><p data-i18n="j6d">To be continued… the best payload hasn't shipped yet.</p></div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="sec-num reveal">05 // TRANSMISSIONS</div>
+  <span class="sec-tag reveal" data-i18n="blog_tag">Blog</span>
+  <h2 class="sec-title reveal" data-i18n="blog_title">Notes from the <span class="grad">terminal</span></h2>
+  <p class="sec-sub reveal" data-i18n="blog_sub">Short, practical write-ups — Termux tips, tool guides and hard-earned lessons.</p>
+  <div class="blog-grid">
+    <div class="blog-card reveal" data-article="a1">
+      <div class="bdate">2026-10-01 // TERMUX</div>
+      <h3 data-i18n="b1t">Termux Setup: 5 Commands Every Beginner Needs</h3>
+      <p data-i18n="b1d">Fresh Termux install? These five commands take you from blank terminal to ready-to-build in two minutes.</p>
+      <div class="read"><span data-i18n="read">Read →</span></div>
+    </div>
+    <div class="blog-card reveal" data-article="a2">
+      <div class="bdate">2026-10-01 // GUIDE</div>
+      <h3 data-i18n="b2t">Install Any V4Z Tool in 60 Seconds</h3>
+      <p data-i18n="b2d">One curl command, one launcher name. Here's exactly how every V4Z tool installs and runs.</p>
+      <div class="read"><span data-i18n="read">Read →</span></div>
+    </div>
+    <div class="blog-card reveal" data-article="a3">
+      <div class="bdate">2026-10-01 // PHILOSOPHY</div>
+      <h3 data-i18n="b3t">Why I Never Copy Other People's Tools</h3>
+      <p data-i18n="b3d">Rebranding someone else's work is easy. Building your own is the whole point. My creed, explained.</p>
+      <div class="read"><span data-i18n="read">Read →</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="sec-num reveal">06 // ARCHIVE</div>
+  <span class="sec-tag reveal" data-i18n="gal_tag">Gallery</span>
+  <h2 class="sec-title reveal" data-i18n="gal_title">Visual <span class="grad">drops</span></h2>
+  <p class="sec-sub reveal" data-i18n="gal_sub">Banners, avatars and artwork from the V4Z universe. Click to enlarge.</p>
+  <div class="gal-grid">
+    <div class="gal-item reveal" data-cap="V4Z YT Downloader — official banner"><img src="https://i.ibb.co/9mH272PC/V4-Z-YT-Downloader-banner.jpg" alt="YT Downloader banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z YT Downloader</div></div>
+    <div class="gal-item reveal" data-cap="V4Z Mega Bot — official banner"><img src="https://i.ibb.co/dwHYV219/V4-Z-Mega-Bot-banner.jpg" alt="Mega Bot banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z Mega Bot</div></div>
+    <div class="gal-item reveal" data-cap="V4Z IP Scanner — official banner"><img src="https://i.ibb.co/ksMcvVCy/banner.jpg" alt="IP Scanner banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z IP Scanner</div></div>
+    <div class="gal-item reveal" data-cap="V4Z Web Ripper — official banner"><img src="https://files.catbox.moe/cukyf4.jpg" alt="Web Ripper banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z Web Ripper</div></div>
+    <div class="gal-item reveal" data-cap="V4Z Hermes Agent — official banner"><img src="https://i.ibb.co/m5pPzNX7/V4-Z-Hermes-Termux-banner.jpg" alt="Hermes banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z Hermes Agent</div></div>
+    <div class="gal-item reveal" data-cap="V4Z RASHD — profile avatar"><img src="https://github.com/v4zrashd.png" alt="V4Z RASHD avatar" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">Profile Avatar</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="sec-num reveal">07 // SIGNALS</div>
+  <span class="sec-tag reveal" data-i18n="tst_tag">Testimonials</span>
+  <h2 class="sec-title reveal" data-i18n="tst_title">What users <span class="grad">say</span></h2>
+  <p class="sec-sub reveal" data-i18n="tst_sub">Real feedback from the Termux community. (Your review could be next.)</p>
+  <div class="testi-wrap reveal">
+    <div class="testi"><div class="testi-track" id="testiTrack">
+      <div class="testi-card"><div class="stars">★★★★★</div><p>"v4zyt downloaded a full playlist in minutes. The fastest downloader I've ever used on Termux."</p><div class="who">— @termux_user</div></div>
+      <div class="testi-card"><div class="stars">★★★★★</div><p>"The Mega Bot replaced four different bots for me. Prayer times, downloads, QR — all in one place."</p><div class="who">— @daily_user</div></div>
+      <div class="testi-card"><div class="stars">★★★★☆</div><p>"v4zscan mapped my own server's open ports in seconds. Clean output, zero dependencies. Impressive."</p><div class="who">— @net_admin</div></div>
+    </div></div>
+    <div class="testi-dots" id="testiDots"></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="sec-num reveal">08 // HIRE</div>
+  <span class="sec-tag reveal" data-i18n="svc_tag">Services</span>
+  <h2 class="sec-title reveal" data-i18n="svc_title">Work <span class="grad">with me</span></h2>
+  <p class="sec-sub reveal" data-i18n="svc_sub">Need something custom built? I ship fast, and everything is original code.</p>
+  <div class="svc-grid">
+    <div class="svc reveal">
+      <div class="sico">🤖</div>
+      <h3 data-i18n="s1t">Custom Telegram Bot</h3>
+      <ul><li data-i18n="s1l1">Buttons, menus & inline queries</li><li data-i18n="s1l2">API integrations</li><li data-i18n="s1l3">Deploy guide for Termux/VPS</li></ul>
+      <div class="price" data-i18n="price">Price: negotiable — DM me</div>
+      <a class="btn btn-primary" style="text-align:center" href="https://t.me/Darkbdx1" target="_blank" rel="noopener"><span data-i18n="order">Order via Telegram</span></a>
+    </div>
+    <div class="svc reveal">
+      <div class="sico">🐧</div>
+      <h3 data-i18n="s2t">Custom Termux Tool</h3>
+      <ul><li data-i18n="s2l1">One-command installer</li><li data-i18n="s2l2">Short launcher command</li><li data-i18n="s2l3">Your branding & banner</li></ul>
+      <div class="price" data-i18n="price">Price: negotiable — DM me</div>
+      <a class="btn btn-primary" style="text-align:center" href="https://t.me/Darkbdx1" target="_blank" rel="noopener"><span data-i18n="order">Order via Telegram</span></a>
+    </div>
+    <div class="svc reveal">
+      <div class="sico">🌐</div>
+      <h3 data-i18n="s3t">Portfolio / Landing Page</h3>
+      <ul><li data-i18n="s3l1">Single-file, mobile-first</li><li data-i18n="s3l2">Animations & 3D effects</li><li data-i18n="s3l3">GitHub Pages deploy guide</li></ul>
+      <div class="price" data-i18n="price">Price: negotiable — DM me</div>
+      <a class="btn btn-primary" style="text-align:center" href="https://t.me/Darkbdx1" target="_blank" rel="noopener"><span data-i18n="order">Order via Telegram</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<section id="social">
+  <div class="sec-num reveal">09 // UPLINK</div>
+  <span class="sec-tag reveal" data-i18n="soc_tag">Social</span>
+  <h2 class="sec-title reveal" data-i18n="soc_title">Find me <span class="grad">everywhere</span></h2>
+  <p class="sec-sub reveal" data-i18n="soc_sub">Follow the builds, the demos and the chaos — pick your platform.</p>
+  <div class="social-grid">
+    <a class="soc reveal" href="https://www.tiktok.com/@v4zrashd" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+      <span class="name">TikTok</span><span class="handle">@v4zrashd</span>
+    </a>
+    <a class="soc reveal" href="https://www.facebook.com/v4zrashd5" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+      <span class="name">Facebook</span><span class="handle">v4zrashd5</span>
+    </a>
+    <a class="soc reveal" href="https://github.com/v4zrashd" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.92.43.38.82 1.11.82 2.24v3.32c0 .31.22.7.83.58A12 12 0 0 0 12 .3z"/></svg>
+      <span class="name">GitHub</span><span class="handle">@v4zrashd</span>
+    </a>
+    <a class="soc reveal" href="https://www.youtube.com/@V4Zteem" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      <span class="name">YouTube</span><span class="handle">@V4Zteem</span>
+    </a>
+    <a class="soc reveal" href="https://t.me/rashdteem" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M11.94 0A12 12 0 1 0 24 12 12 12 0 0 0 11.94 0zm6.5 7.2-2.2 10.4c-.16.74-.6.92-1.22.57l-3.36-2.48-1.62 1.56c-.18.18-.33.33-.68.33l.24-3.44 6.26-5.66c.27-.24-.06-.38-.42-.14L7 12.7l-3.3-1.03c-.72-.23-.73-.72.15-1.06L16.77 5.6c.6-.22 1.12.14.93 1.6z"/></svg>
+      <span class="name">Telegram Channel</span><span class="handle">@rashdteem</span>
+    </a>
+    <a class="soc reveal" href="https://t.me/Darkbdx1" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M21.9 4.6 2.7 12.1c-.6.24-.6 1.06.02 1.28l4.7 1.74 1.8 5.6c.22.68 1.06.8 1.44.24l2.6-3.9 4.9 3.6c.5.37 1.24.07 1.42-.55l2.66-13.2c.18-.82-.68-1.5-1.44-1.31zM8.5 13.1l8.8-6.5c.2-.15.44.14.26.32l-7.2 7.1-.3 3.1c-.04.4-.6.45-.75.07l-1.7-3.6c-.12-.28.14-.6.42-.5z"/></svg>
+      <span class="name">Telegram DM</span><span class="handle">@Darkbdx1</span>
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-num reveal" style="text-align:center">10 // HANDSHAKE</div>
+  <div class="contact-grid" style="margin-top:26px">
+    <div class="contact-box reveal reveal-s">
+      <span class="sec-tag" data-i18n="contact_tag">Contact</span>
+      <h2 data-i18n="contact_title">Let's build something <span class="grad">crazy</span> together</h2>
+      <p data-i18n="contact_sub">Got a tool idea, a collab, or just want to say hi? My DMs are open — fastest reply on Telegram.</p>
+      <div class="hero-btns" style="justify-content:center">
+        <a class="btn btn-primary magnetic" href="https://t.me/Darkbdx1" target="_blank" rel="noopener" data-i18n="btn_msg">Message on Telegram</a>
+        <a class="btn btn-ghost magnetic" href="https://t.me/rashdteem" target="_blank" rel="noopener" data-i18n="btn_join">Join Channel</a>
+      </div>
+    </div>
+    <div class="form-box reveal reveal-s">
+      <h3 data-i18n="form_title">📨 Send a message</h3>
+      <div class="fnote" data-i18n="form_note">Delivered straight to my Telegram.</div>
+      <form id="contactForm">
+        <label data-i18n="form_name">YOUR NAME</label>
+        <input type="text" id="cfName" required maxlength="60" data-i18n-ph="form_name_ph" placeholder="e.g. Sakib">
+        <label data-i18n="form_contact">YOUR CONTACT (telegram @ / phone)</label>
+        <input type="text" id="cfContact" required maxlength="80" data-i18n-ph="form_contact_ph" placeholder="@username or 01XXXXXXXXX">
+        <label data-i18n="form_msg">MESSAGE</label>
+        <textarea id="cfMsg" rows="4" required maxlength="1000" data-i18n-ph="form_msg_ph" placeholder="What do you want to build?"></textarea>
+        <button type="submit" class="btn btn-primary"><span data-i18n="form_send">Send →</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 <b>V4Z RASHD</b> — crafted with obsession, rendered in particles.<br>
+  <span style="font-size:.8rem">single .html file • three.js • web audio • zero frameworks harmed</span>
+  <span class="visits">👁 <span id="visits">1</span> <span data-i18n="visits">visits from this device</span></span>
+</footer>
+
+<div id="toast"></div>
+
+<button class="fab" id="topBtn" aria-label="Back to top">↑</button>
+<button class="fab" id="chatBtn" aria-label="Chat">💬</button>
+<button class="fab" id="soundBtn" aria-label="Toggle sound">🔊</button>
+<button class="fab" id="musicBtn" aria-label="Toggle music">🎵</button>
+
+<!-- CHATBOT -->
+<div id="chatPanel">
+  <div class="chead"><b>🤖 <span>V4Z</span> assistant</b><button id="chatClose">✕</button></div>
+  <div id="chatMsgs"></div>
+  <form id="chatForm"><input id="chatInput" autocomplete="off" data-i18n-ph="chat_ph" placeholder="Ask about tools, install, contact…"><button type="submit">➤</button></form>
+</div>
+
+<!-- BLOG MODAL -->
+<div id="blogModal"><div class="blog-modal-box">
+  <button id="blogClose">✕</button>
+  <h2 id="bmTitle"></h2><span class="bdate" id="bmDate"></span>
+  <div id="bmBody"></div>
+</div></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lbClose">✕</button>
+  <button id="lbPrev">‹</button><button id="lbNext">›</button>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============================================================
+   I18N — English / বাংলা
+============================================================ */
+const I18N = {
+en:{
+nav_home:"Home",nav_about:"About",nav_skills:"Skills",nav_projects:"Projects",nav_journey:"Journey",nav_blog:"Blog",nav_gallery:"Gallery",nav_services:"Services",nav_contact:"Contact",
+hero_badge:"Available for new ideas & collabs",
+hero_desc:"I craft original, mobile-first tools for Termux & Android — downloaders, Telegram bots, network utilities. One install command. Zero bloat. Built with obsession for the small screen.",
+btn_projects:"Explore Projects",btn_contact:"Connect With Me",btn_msg:"Message on Telegram",btn_join:"Join Channel",
+stat_repos:"Public Repos",stat_followers:"GitHub Followers",stat_tools:"Termux Tools",stat_original:"Original Code",
+about_tag:"About Me",about_title:'Developer by <span class="grad">passion</span>,<br>hacker by <span class="grad">curiosity</span>',
+about_sub:"A young developer from Bangladesh building a one-man brand — V4Z RASHD — across Termux tooling, Telegram bots and short-form content.",
+about_p1:'<b>Rashed</b>, known online as <span class="hl">V4Z RASHD</span> — I design and ship tools that run right on your phone. No heavy setup, no desktop needed: one install command and you are running.',
+about_p2:'My projects focus on <b>real utility</b>: downloading media, automating Telegram, scanning networks, ripping websites for offline study — all open source on GitHub.',
+about_p3:'When I\'m not coding, I\'m making content on <b>TikTok & YouTube</b> and growing my Telegram channel <span class="hl">@rashdteem</span>.',
+fact_editor:"phone + termux, mostly",fact_status:"shipping while you sleep",
+skills_tag:"Skills",skills_title:'What I <span class="grad">do best</span>',skills_sub:"Battle-tested on real devices, in real Termux sessions — not just theory.",
+prof:"Proficiency",sk1t:"Termux Tool Development",sk1d:"One-command installers, launchers and CLI tools built for Android terminals.",
+sk2t:"Telegram Bots",sk2d:"Async Python bots — downloaders, utilities, menus, APIs — running 24/7.",
+sk3d:"Threading, networking, APIs, automation — stdlib-first, dependency-light.",
+sk4d:"Modern animated sites and WebView apps — like this page, and 3D games.",
+sk5t:"Android / APK",sk5d:"Packaging web apps into installable APKs with custom icons and branding.",
+sk6t:"Content Creation",sk6d:"Short-form video on TikTok & YouTube — tutorials, tool demos, promos.",
+proj_tag:"Projects",proj_title:'Termux <span class="grad">arsenal</span>',proj_sub:"Every tool installs with a single command and runs with a short launcher. Tap copy, paste in Termux, done.",
+p1d:"Multi-site video & audio downloader — YouTube, Facebook, Instagram, TikTok and 1000+ sites. MP4 / MP3 / playlist support.",
+p2d:"All-in-one Telegram bot: media downloader, Dhaka prayer times, currency → BDT, QR codes, password generator and more.",
+p3d:"Fast IP & network scanner in pure Python — domain info, CIDR range scan, quick + deep port scans. Zero pip dependencies.",
+p4d:"Download any single page or crawl a full site for offline study — assets organized, links rewritten, works offline.",
+p5d:"One-command Termux installer for the open-source Hermes AI agent (Nous Research) — with full setup guide.",
+p6t:'Next tool is <span style="background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent">cooking…</span>',
+p6d:"New ideas land on my Telegram channel first. Join to vote on what gets built next.",p6b:"Join @rashdteem →",
+copy:"⧉ Copy install",view:"View repo →",repos_title:'Every <span class="grad">repository</span>, live from GitHub',
+jrn_tag:"Journey",jrn_title:'The road <span class="grad">so far</span>',jrn_sub:"From zero to a one-man brand — every milestone earned on a phone screen.",
+j1t:"$ git init — the beginning",j1d:"Opened GitHub as @v4zrashd. First repos, first commits, first stars. The V4Z story starts here.",
+j2t:"$ ./first_tools --deploy",j2d:"Shipped the first Termux tools and Telegram chatbots. Learned that real users beat perfect code.",
+j3t:"$ v4z_brand --launch",j3d:"The V4Z arsenal drops: YT Downloader, Mega Bot, IP Scanner, Web Ripper, Hermes Agent — all original, all one-command installs.",
+j4t:"$ broadcast --channel",j4d:"Launched the Telegram channel @rashdteem — the HQ for every release, poll and update.",
+j5t:"$ deploy portfolio --live",j5d:"This personal site goes live — one HTML file, Three.js particles, and everything I am.",
+j6t:"$ next --unknown",j6d:"To be continued… the best payload hasn't shipped yet.",
+blog_tag:"Blog",blog_title:'Notes from the <span class="grad">terminal</span>',blog_sub:"Short, practical write-ups — Termux tips, tool guides and hard-earned lessons.",
+b1t:"Termux Setup: 5 Commands Every Beginner Needs",b1d:"Fresh Termux install? These five commands take you from blank terminal to ready-to-build in two minutes.",
+b2t:"Install Any V4Z Tool in 60 Seconds",b2d:"One curl command, one launcher name. Here's exactly how every V4Z tool installs and runs.",
+b3t:"Why I Never Copy Other People's Tools",b3d:"Rebranding someone else's work is easy. Building your own is the whole point. My creed, explained.",
+read:"Read →",
+gal_tag:"Gallery",gal_title:'Visual <span class="grad">drops</span>',gal_sub:"Banners, avatars and artwork from the V4Z universe. Click to enlarge.",
+tst_tag:"Testimonials",tst_title:'What users <span class="grad">say</span>',tst_sub:"Real feedback from the Termux community. (Your review could be next.)",
+svc_tag:"Services",svc_title:'Work <span class="grad">with me</span>',svc_sub:"Need something custom built? I ship fast, and everything is original code.",
+s1t:"Custom Telegram Bot",s1l1:"Buttons, menus & inline queries",s1l2:"API integrations",s1l3:"Deploy guide for Termux/VPS",
+s2t:"Custom Termux Tool",s2l1:"One-command installer",s2l2:"Short launcher command",s2l3:"Your branding & banner",
+s3t:"Portfolio / Landing Page",s3l1:"Single-file, mobile-first",s3l2:"Animations & 3D effects",s3l3:"GitHub Pages deploy guide",
+price:"Price: negotiable — DM me",order:"Order via Telegram",
+soc_tag:"Social",soc_title:'Find me <span class="grad">everywhere</span>',soc_sub:"Follow the builds, the demos and the chaos — pick your platform.",
+contact_tag:"Contact",contact_title:'Let\'s build something <span class="grad">crazy</span> together',contact_sub:"Got a tool idea, a collab, or just want to say hi? My DMs are open — fastest reply on Telegram.",
+form_title:"📨 Send a message",form_note:"Delivered straight to my Telegram.",
+form_name:"YOUR NAME",form_name_ph:"e.g. Sakib",form_contact:"YOUR CONTACT (telegram @ / phone)",form_contact_ph:"@username or 01XXXXXXXXX",
+form_msg:"MESSAGE",form_msg_ph:"What do you want to build?",form_send:"Send →",
+visits:"visits from this device",chat_ph:"Ask about tools, install, contact…"
+},
+bn:{
+nav_home:"হোম",nav_about:"পরিচিতি",nav_skills:"দক্ষতা",nav_projects:"প্রজেক্ট",nav_journey:"যাত্রা",nav_blog:"ব্লগ",nav_gallery:"গ্যালারি",nav_services:"সার্ভিস",nav_contact:"যোগাযোগ",
+hero_badge:"নতুন আইডিয়া ও কোলাবের জন্য available",
+hero_desc:"আমি Termux ও Android-এর জন্য অরিজিনাল, মোবাইল-ফার্স্ট টুল বানাই — ডাউনলোডার, টেলিগ্রাম বট, নেটওয়ার্ক ইউটিলিটি। একটা ইনস্টল কমান্ড। জিরো ভেজাল। ছোট স্ক্রিনের জন্য obsession নিয়ে তৈরি।",
+btn_projects:"প্রজেক্ট দেখো",btn_contact:"যোগাযোগ করো",btn_msg:"টেলিগ্রামে মেসেজ করো",btn_join:"চ্যানেলে জয়েন করো",
+stat_repos:"পাবলিক রিপো",stat_followers:"গিটহাব ফলোয়ার",stat_tools:"টার্মাক্স টুল",stat_original:"অরিজিনাল কোড",
+about_tag:"আমার সম্পর্কে",about_title:'প্যাশন দিয়ে <span class="grad">ডেভেলপার</span>,<br>কৌতূহলে <span class="grad">হ্যাকার</span>',
+about_sub:"বাংলাদেশের এক তরুণ ডেভেলপার — একার ব্র্যান্ড V4Z RASHD গড়ছি Termux টুল, টেলিগ্রাম বট আর শর্ট-ফর্ম কনটেন্ট দিয়ে।",
+about_p1:'<b>রাশেদ</b>, অনলাইনে <span class="hl">V4Z RASHD</span> নামে পরিচিত — আমি এমন টুল বানাই যা তোমার ফোনেই চলে। ভারী সেটআপ না, ডেস্কটপ না: একটা ইনস্টল কমান্ড, আর তুমি রানিং।',
+about_p2:'আমার প্রজেক্টগুলো <b>আসল কাজের</b>: মিডিয়া ডাউনলোড, টেলিগ্রাম অটোমেশন, নেটওয়ার্ক স্ক্যান, অফলাইন পড়ার জন্য ওয়েবসাইট রিপ — সব GitHub-এ ওপেন সোর্স।',
+about_p3:'কোডিং না করলে <b>TikTok ও YouTube</b>-এ কনটেন্ট বানাই, আর আমার টেলিগ্রাম চ্যানেল <span class="hl">@rashdteem</span> বড় করছি।',
+fact_editor:"ফোন + টার্মাক্স, বেশিরভাগ",fact_status:"তুমি ঘুমাও, আমি শিপ করি",
+skills_tag:"দক্ষতা",skills_title:'আমি সবচেয়ে <span class="grad">ভালো</span> যা করি',skills_sub:"আসল ডিভাইসে, আসল Termux সেশনে পরীক্ষিত — শুধু থিওরি না।",
+prof:"দক্ষতা",sk1t:"টার্মাক্স টুল ডেভেলপমেন্ট",sk1d:"অ্যান্ড্রয়েড টার্মিনালের জন্য এক-কমান্ড ইনস্টলার, লঞ্চার আর CLI টুল।",
+sk2t:"টেলিগ্রাম বট",sk2d:"অ্যাসিংক পাইথন বট — ডাউনলোডার, ইউটিলিটি, মেনু, API — ২৪/৭ রানিং।",
+sk3d:"থ্রেডিং, নেটওয়ার্কিং, API, অটোমেশন — stdlib-ফার্স্ট, হালকা ডিপেন্ডেন্সি।",
+sk4d:"মডার্ন অ্যানিমেটেড সাইট আর WebView অ্যাপ — এই পেজটার মতো, আর 3D গেম।",
+sk5t:"অ্যান্ড্রয়েড / APK",sk5d:"ওয়েব অ্যাপকে কাস্টম আইকন আর ব্র্যান্ডিংসহ ইনস্টলযোগ্য APK বানানো।",
+sk6t:"কনটেন্ট ক্রিয়েশন",sk6d:"TikTok ও YouTube-এ শর্ট-ফর্ম ভিডিও — টিউটোরিয়াল, টুল ডেমো, প্রোমো।",
+proj_tag:"প্রজেক্টস",proj_title:'টার্মাক্স <span class="grad">অস্ত্রাগার</span>',proj_sub:"প্রতিটা টুল একটা কমান্ডে ইনস্টল হয়, ছোট লঞ্চারে চলে। কপি চাপো, Termux-এ পেস্ট করো, শেষ।",
+p1d:"মাল্টি-সাইট ভিডিও ও অডিও ডাউনলোডার — YouTube, Facebook, Instagram, TikTok আর ১০০০+ সাইট। MP4 / MP3 / প্লেলিস্ট সাপোর্ট।",
+p2d:"অল-ইন-ওয়ান টেলিগ্রাম বট: মিডিয়া ডাউনলোডার, ঢাকার নামাজের সময়, কারেন্সি → BDT, QR কোড, পাসওয়ার্ড জেনারেটর আরও অনেক।",
+p3d:"খাঁটি পাইথনে দ্রুত IP ও নেটওয়ার্ক স্ক্যানার — ডোমেইন ইনফো, CIDR রেঞ্জ স্ক্যান, কুইক + ডিপ পোর্ট স্ক্যান। জিরো pip ডিপেন্ডেন্সি।",
+p4d:"যেকোনো পেজ ডাউনলোড করো বা পুরো সাইট ক্রল করো অফলাইন পড়ার জন্য — ফাইল গোছানো, লিংক ঠিক করা, অফলাইনে চলে।",
+p5d:"ওপেন-সোর্স Hermes AI এজেন্টের (Nous Research) এক-কমান্ড Termux ইনস্টলার — পুরো সেটআপ গাইডসহ।",
+p6t:'পরের টুল <span style="background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent">রান্না হচ্ছে…</span>',
+p6d:"নতুন আইডিয়া সবার আগে আমার টেলিগ্রাম চ্যানেলে আসে। পরেরটা কী বানাবো — ভোট দিতে জয়েন করো।",p6b:"@rashdteem-এ জয়েন করো →",
+copy:"⧉ কপি করো",view:"রিপো দেখো →",repos_title:'<span class="grad">সব রিপোজিটরি</span>, সরাসরি GitHub থেকে',
+jrn_tag:"যাত্রা",jrn_title:'এ <span class="grad">পর্যন্ত</span> পথ',jrn_sub:"শূন্য থেকে একার ব্র্যান্ড — প্রতিটা মাইলস্টোন ফোনের স্ক্রিনে অর্জিত।",
+j1t:"$ git init — শুরু",j1d:"@v4zrashd নামে GitHub খুললাম। প্রথম রিপো, প্রথম কমিট, প্রথম স্টার। V4Z গল্প এখান থেকে।",
+j2t:"$ ./first_tools --deploy",j2d:"প্রথম Termux টুল আর টেলিগ্রাম চ্যাটবট শিপ করলাম। শিখলাম — পারফেক্ট কোডের চেয়ে আসল ইউজার বড়।",
+j3t:"$ v4z_brand --launch",j3d:"V4Z অস্ত্রাগার এলো: YT Downloader, Mega Bot, IP Scanner, Web Ripper, Hermes Agent — সব অরিজিনাল, সব এক-কমান্ড ইনস্টল।",
+j4t:"$ broadcast --channel",j4d:"টেলিগ্রাম চ্যানেল @rashdteem লঞ্চ — প্রতিটা রিলিজ, পোল আর আপডেটের HQ।",
+j5t:"$ deploy portfolio --live",j5d:"এই পার্সোনাল সাইট লাইভ — একটা HTML ফাইল, Three.js পার্টিকেল, আর পুরো আমি।",
+j6t:"$ next --unknown",j6d:"চলবে… সেরা পেলোডটা এখনো শিপ হয়নি।",
+blog_tag:"ব্লগ",blog_title:'টার্মিনাল থেকে <span class="grad">নোটস</span>',blog_sub:"ছোট, কাজের লেখা — Termux টিপস, টুল গাইড আর কষ্টে শেখা শিক্ষা।",
+b1t:"Termux সেটআপ: প্রত্যেক বিগিনারের ৫টা কমান্ড",b1d:"ফ্রেশ Termux? এই পাঁচটা কমান্ডে দুই মিনিটে ব্ল্যাংক টার্মিনাল থেকে বিল্ড-রেডি।",
+b2t:"৬০ সেকেন্ডে যেকোনো V4Z টুল ইনস্টল করো",b2d:"একটা curl কমান্ড, একটা লঞ্চার নাম। প্রতিটা V4Z টুল ঠিক কীভাবে ইনস্টল আর রান হয়।",
+b3t:"কেন আমি কখনো অন্যের টুল কপি করি না",b3d:"অন্যের কাজ রিব্র্যান্ড করা সহজ। নিজে বানানোই আসল কথা। আমার নীতি, ব্যাখ্যাসহ।",
+read:"পড়ো →",
+gal_tag:"গ্যালারি",gal_title:'ভিজ্যুয়াল <span class="grad">ড্রপস</span>',gal_sub:"V4Z ইউনিভার্সের ব্যানার, অ্যাভাটার আর আর্টওয়ার্ক। বড় দেখতে ক্লিক করো।",
+tst_tag:"রিভিউ",tst_title:'ইউজাররা <span class="grad">যা বলে</span>',tst_sub:"Termux কমিউনিটির আসল ফিডব্যাক। (পরের রিভিউটা তোমার হতে পারে।)",
+svc_tag:"সার্ভিস",svc_title:'আমার সাথে <span class="grad">কাজ করো</span>',svc_sub:"কাস্টম কিছু বানাতে চাও? আমি দ্রুত শিপ করি, আর সব অরিজিনাল কোড।",
+s1t:"কাস্টম টেলিগ্রাম বট",s1l1:"বাটন, মেনু ও ইনলাইন কুয়েরি",s1l2:"API ইন্টিগ্রেশন",s1l3:"Termux/VPS ডিপ্লয় গাইড",
+s2t:"কাস্টম টার্মাক্স টুল",s2l1:"এক-কমান্ড ইনস্টলার",s2l2:"ছোট লঞ্চার কমান্ড",s2l3:"তোমার ব্র্যান্ডিং ও ব্যানার",
+s3t:"পোর্টফোলিও / ল্যান্ডিং পেজ",s3l1:"সিঙ্গেল-ফাইল, মোবাইল-ফার্স্ট",s3l2:"অ্যানিমেশন ও 3D ইফেক্ট",s3l3:"GitHub Pages ডিপ্লয় গাইড",
+price:"দাম: আলোচনা সাপেক্ষ — DM করো",order:"টেলিগ্রামে অর্ডার করো",
+soc_tag:"সোশ্যাল",soc_title:'আমাকে <span class="grad">সবখানে</span> পাবে',soc_sub:"বিল্ড, ডেমো আর হইচই ফলো করো — প্ল্যাটফর্ম বেছে নাও।",
+contact_tag:"যোগাযোগ",contact_title:'চলো <span class="grad">পাগলাটে</span> কিছু বানাই',contact_sub:"টুল আইডিয়া, কোলাব, বা শুধু হাই বলতে চাও? DM খোলা — টেলিগ্রামে দ্রুত রিপ্লাই।",
+form_title:"📨 মেসেজ পাঠাও",form_note:"সরাসরি আমার টেলিগ্রামে পৌঁছাবে।",
+form_name:"তোমার নাম",form_name_ph:"যেমন: সাকিব",form_contact:"যোগাযোগ (telegram @ / ফোন)",form_contact_ph:"@username বা 01XXXXXXXXX",
+form_msg:"মেসেজ",form_msg_ph:"কী বানাতে চাও?",form_send:"পাঠাও →",
+visits:"বার ভিজিট (এই ডিভাইস)",chat_ph:"টুল, ইনস্টল, যোগাযোগ নিয়ে জিজ্ঞেস করো…"
+}};
+let LANG = localStorage.getItem('v4z_lang') || 'en';
+function applyLang(){
+  document.documentElement.lang = LANG==='bn' ? 'bn' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;
+    if(I18N[LANG][k]!==undefined) el.innerHTML=I18N[LANG][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.dataset.i18nPh;
+    if(I18N[LANG][k]!==undefined) el.placeholder=I18N[LANG][k];
+  });
+  document.getElementById('langBtn').textContent = LANG==='bn' ? 'English' : 'বাংলা';
+  localStorage.setItem('v4z_lang',LANG);
+}
+document.getElementById('langBtn').addEventListener('click',()=>{ LANG = LANG==='bn'?'en':'bn'; applyLang(); SFX.pop(); });
+applyLang();
+
+/* ================= SOUND FX ================= */
+const SFX=(function(){
+  let ctx=null,enabled=true;
+  function ac(){ if(!ctx){ try{ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return null;} } if(ctx&&ctx.state==='suspended')ctx.resume(); return ctx; }
+  function tone(f,d,type,v,dl){
+    if(!enabled)return; const c=ac(); if(!c)return;
+    try{
+      const t=c.currentTime+(dl||0),o=c.createOscillator(),g=c.createGain();
+      o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v||.05,t+.015); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+d+.05);
+    }catch(e){}
+  }
+  document.addEventListener('pointerdown',function u(){ac();document.removeEventListener('pointerdown',u);},{once:true});
+  return{
+    hover(){tone(700,.06,'sine',.03);},
+    click(){tone(520,.09,'triangle',.06); tone(784,.11,'sine',.045,.05);},
+    pop(){tone(440,.08,'square',.035); tone(880,.12,'sine',.05,.06);},
+    toggle(){enabled=!enabled;return enabled;}
+  };
+})();
+(function(){
+  const b=document.getElementById('soundBtn');
+  b.addEventListener('click',()=>{const on=SFX.toggle(); b.textContent=on?'🔊':'🔇'; b.classList.toggle('off',!on); if(on)SFX.pop();});
+  const bind=()=>document.querySelectorAll('a,button,.soc,.proj,.blog-card,.gal-item').forEach(el=>{
+    if(el._sfx)return; el._sfx=1;
+    el.addEventListener('mouseenter',()=>SFX.hover());
+    el.addEventListener('click',()=>SFX.click());
+  });
+  bind(); window._rebindSfx=bind;
+})();
+
+/* ================= BACKGROUND MUSIC (Web Audio ambient) ================= */
+const Music=(function(){
+  let playing=false, timer=null, ctx=null, master=null;
+  function ac(){ if(!ctx){ try{ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return null;} } if(ctx&&ctx.state==='suspended')ctx.resume(); return ctx; }
+  const chords=[[110,130.81,164.81],[87.31,110,130.81],[130.81,164.81,196],[98,123.47,146.83]]; // Am F C G
+  let ci=0;
+  function playChord(notes){
+    const c=ac(); if(!c||!master)return;
+    const t=c.currentTime;
+    notes.forEach((f,i)=>{
+      const o=c.createOscillator(), g=c.createGain(), fl=c.createBiquadFilter();
+      o.type='triangle'; o.frequency.value=f*(i===0?0.5:1);
+      fl.type='lowpass'; fl.frequency.value=700;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.linearRampToValueAtTime(0.05,t+1.2);
+      g.gain.linearRampToValueAtTime(0.0001,t+4.4);
+      o.connect(fl); fl.connect(g); g.connect(master);
+      o.start(t); o.stop(t+4.6);
+    });
+  }
+  return{
+    toggle(){
+      const c=ac(); if(!c)return false;
+      playing=!playing;
+      if(playing){
+        master=c.createGain(); master.gain.value=.8; master.connect(c.destination);
+        playChord(chords[ci%4]); ci++;
+        timer=setInterval(()=>{ playChord(chords[ci%4]); ci++; },4200);
+      }else{
+        clearInterval(timer); timer=null;
+        if(master){ try{master.disconnect();}catch(e){} master=null; }
+      }
+      return playing;
+    }
+  };
+})();
+(function(){
+  const b=document.getElementById('musicBtn');
+  b.addEventListener('click',()=>{ const on=Music.toggle(); b.textContent=on?'🎵':'🔇'; b.classList.toggle('off',!on); });
+})();
+
+/* ================= THREE.JS GLOBE + STARFIELD ================= */
+(function(){
+  const canvas=document.getElementById('bg');
+  const isMobile=window.innerWidth<768;
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:!isMobile});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,1000);
+  camera.position.z=34;
+  (function(){
+    const n=isMobile?350:900, pos=new Float32Array(n*3);
+    for(let i=0;i<n*3;i+=3){ pos[i]=(Math.random()-.5)*160; pos[i+1]=(Math.random()-.5)*110; pos[i+2]=(Math.random()-.5)*70; }
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0x88ffbb,size:.28,transparent:true,opacity:.5,blending:THREE.AdditiveBlending,depthWrite:false})));
+  })();
+  const globe=new THREE.Group();
+  (function(){
+    const n=isMobile?500:1100, R=10, pos=new Float32Array(n*3), col=new Float32Array(n*3);
+    const c1=new THREE.Color(0x00ff88), c2=new THREE.Color(0x00e5ff), tmp=new THREE.Color();
+    const phi=Math.PI*(3-Math.sqrt(5));
+    for(let i=0;i<n;i++){
+      const y=1-(i/(n-1))*2, r=Math.sqrt(1-y*y), th=phi*i;
+      pos[i*3]=Math.cos(th)*r*R; pos[i*3+1]=y*R; pos[i*3+2]=Math.sin(th)*r*R;
+      tmp.copy(c1).lerp(c2,Math.random()); col[i*3]=tmp.r; col[i*3+1]=tmp.g; col[i*3+2]=tmp.b;
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    g.setAttribute('color',new THREE.BufferAttribute(col,3));
+    globe.add(new THREE.Points(g,new THREE.PointsMaterial({size:.32,vertexColors:true,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false})));
+    globe.add(new THREE.Mesh(new THREE.IcosahedronGeometry(R,1),new THREE.MeshBasicMaterial({color:0x00e5ff,wireframe:true,transparent:true,opacity:.07})));
+  })();
+  globe.position.set(isMobile?0:19,3,-6); scene.add(globe);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(14,.06,8,120),new THREE.MeshBasicMaterial({color:0xb366ff,transparent:true,opacity:.35}));
+  ring.position.copy(globe.position); ring.rotation.x=Math.PI/2.4; scene.add(ring);
+  let mx=0,my=0;
+  window.addEventListener('mousemove',e=>{mx=(e.clientX/window.innerWidth-.5)*2; my=(e.clientY/window.innerHeight-.5)*2;});
+  window.addEventListener('deviceorientation',e=>{ if(e.gamma==null)return; mx=Math.max(-1,Math.min(1,e.gamma/30)); my=Math.max(-1,Math.min(1,e.beta/45)); });
+  window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+  let running=true;
+  document.addEventListener('visibilitychange',()=>{running=!document.hidden; if(running)loop();});
+  const clock=new THREE.Clock();
+  function loop(){
+    if(!running)return;
+    requestAnimationFrame(loop);
+    const t=clock.getElapsedTime();
+    globe.rotation.y=t*.18; globe.rotation.x=Math.sin(t*.2)*.25;
+    ring.rotation.z=t*.1;
+    globe.position.y=3+Math.sin(t*.7)*1.1; ring.position.y=globe.position.y;
+    camera.position.x+=(mx*5-camera.position.x)*.04;
+    camera.position.y+=(-my*3.5-camera.position.y)*.04;
+    camera.lookAt(isMobile?0:6,0,0);
+    scene.position.y=window.scrollY*.0035*8;
+    renderer.render(scene,camera);
+  }
+  loop();
+})();
+
+/* ================= TYPING ================= */
+(function(){
+  const roles=["Termux Tool Developer","Telegram Bot Maker","Python Programmer","Android Enthusiast","Open Source Builder"];
+  const el=document.getElementById('typed');
+  let ri=0,ci=0,del=false;
+  (function tick(){
+    const w=roles[ri]; el.textContent=w.slice(0,ci);
+    if(!del&&ci<w.length){ci++;setTimeout(tick,65);}
+    else if(!del){del=true;setTimeout(tick,1400);}
+    else if(ci>0){ci--;setTimeout(tick,32);}
+    else{del=false;ri=(ri+1)%roles.length;setTimeout(tick,380);}
+  })();
+})();
+
+/* ================= REVEAL + BARS + COUNT-UP ================= */
+(function(){
+  function countUp(el){
+    const target=+el.dataset.target, dur=1400, t0=performance.now();
+    (function f(t){ const p=Math.min((t-t0)/dur,1), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(target*e); if(p<1)requestAnimationFrame(f); })(t0);
+  }
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.bar span').forEach(b=>b.style.width=b.dataset.w);
+      e.target.querySelectorAll('[data-count]').forEach(countUp);
+      io.unobserve(e.target);
+    }
+  }),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('#home [data-count]').forEach(countUp);
+})();
+
+/* ================= TILT / MAGNETIC / CURSOR ================= */
+(function(){
+  if(!window.matchMedia('(pointer:fine)').matches)return;
+  document.querySelectorAll('.tilt,#tiltCard').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(900px) rotateX(${-y*10}deg) rotateY(${x*10}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
+  document.querySelectorAll('.magnetic').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=b.getBoundingClientRect();
+      b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.28}px)`;
+    });
+    b.addEventListener('mouseleave',()=>{b.style.transform='';});
+  });
+  const c=document.getElementById('cursor');
+  let x=0,y=0,tx=0,ty=0;
+  window.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;});
+  (function f(){ x+=(tx-x)*.2; y+=(ty-y)*.2; c.style.left=x+'px'; c.style.top=y+'px'; requestAnimationFrame(f); })();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>c.classList.add('big'));
+    el.addEventListener('mouseleave',()=>c.classList.remove('big'));
+  });
+})();
+
+/* ================= MARQUEE ================= */
+(function(){ const t=document.getElementById('mqTrack'); t.innerHTML+=t.innerHTML; })();
+
+/* ================= PROGRESS + TOP ================= */
+(function(){
+  const p=document.getElementById('progress'),t=document.getElementById('topBtn');
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement;
+    p.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    t.style.display=h.scrollTop>600?'flex':'none';
+  },{passive:true});
+  t.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+})();
+
+/* ================= COPY ================= */
+document.querySelectorAll('.mini-btn.copy').forEach(b=>{
+  b.addEventListener('click',()=>{
+    SFX.pop();
+    navigator.clipboard.writeText(b.dataset.cmd).then(()=>{
+      const o=b.innerHTML; b.innerHTML='✓ Copied!'; setTimeout(()=>b.innerHTML=o,1600);
+    }).catch(()=>{b.innerHTML='Copy failed';});
+  });
+});
+
+/* ================= MOBILE NAV ================= */
+(function(){
+  const b=document.getElementById('menuBtn'),l=document.getElementById('navLinks');
+  b.addEventListener('click',()=>l.classList.toggle('open'));
+  l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>l.classList.remove('open')));
+})();
+
+/* ================= GITHUB ================= */
+(function(){
+  fetch('https://api.github.com/users/v4zrashd').then(r=>r.ok?r.json():null).then(d=>{
+    if(!d)return;
+    const sr=document.getElementById('statRepos'), sf=document.getElementById('statFollowers');
+    if(d.public_repos){sr.dataset.target=d.public_repos; sr.textContent=d.public_repos;}
+    if(d.followers!=null){sf.dataset.target=d.followers; sf.textContent=d.followers;}
+  }).catch(()=>{});
+  const langColors={Python:'#3572A5',JavaScript:'#f1e05a',HTML:'#e34c26',CSS:'#563d7c',Shell:'#89e051',Java:'#b07219',TypeScript:'#2b7489',Go:'#00ADD8',Dart:'#00B4AB',Kotlin:'#A97BFF',PHP:'#4F5D95'};
+  const grid=document.getElementById('repoGrid'),st=document.getElementById('repoStatus');
+  fetch('https://api.github.com/users/v4zrashd/repos?per_page=100&sort=updated').then(r=>r.ok?r.json():null).then(rs=>{
+    if(!rs||!rs.length){st.textContent='// could not reach github right now';return;}
+    const list=rs.filter(r=>!r.fork);
+    st.textContent='// '+list.length+' public repositories — synced live from github';
+    grid.innerHTML=list.map((r,i)=>{
+      const c=langColors[r.language]||'#888';
+      const d=new Date(r.updated_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      return '<div class="repo-card" style="transition-delay:'+(i*40)+'ms"><h4><a href="'+r.html_url+'" target="_blank" rel="noopener">📦 '+r.name+'</a></h4>'
+        +'<p>'+(r.description?r.description.replace(/</g,'&lt;'):'No description yet.')+'</p>'
+        +'<div class="repo-meta">'+(r.language?'<span class="lang"><span class="dot" style="background:'+c+';color:'+c+'"></span>'+r.language+'</span>':'')
+        +'<span class="stars">★ '+r.stargazers_count+'</span><span>↻ '+d+'</span></div></div>';
+    }).join('');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>grid.querySelectorAll('.repo-card').forEach(x=>x.classList.add('visible'))));
+    if(window._rebindSfx)window._rebindSfx();
+  }).catch(()=>{st.textContent='// could not reach github right now';});
+})();
+
+/* ================= BLOG MODAL ================= */
+const ARTICLES={
+a1:{t:{en:"Termux Setup: 5 Commands Every Beginner Needs",bn:"Termux সেটআপ: প্রত্যেক বিগিনারের ৫টা কমান্ড"},
+b:{en:'<p>Fresh Termux install? Don\'t wander — run these five and you\'re ready to build.</p><p><b>1.</b> <code>pkg update && pkg upgrade</code> — sync everything first. Always.</p><p><b>2.</b> <code>pkg install python git</code> — the two tools 90% of scripts need.</p><p><b>3.</b> <code>termux-setup-storage</code> — grants access to your phone storage. Run once.</p><p><b>4.</b> <code>pkg install openssh</code> — then <code>sshd</code> to reach your phone remotely.</p><p><b>5.</b> <code>pkg install nano</code> — a sane editor for quick fixes.</p><p>That\'s it. Two minutes, and your pocket terminal is a dev machine.</p>',
+bn:'<p>ফ্রেশ Termux? ঘোরাঘুরি না করে এই পাঁচটা চালাও — তুমি বিল্ড-রেডি।</p><p><b>১.</b> <code>pkg update && pkg upgrade</code> — আগে সব সিংক করো। সবসময়।</p><p><b>২.</b> <code>pkg install python git</code> — ৯০% স্ক্রিপ্টের এই দুটোই লাগে।</p><p><b>৩.</b> <code>termux-setup-storage</code> — ফোন স্টোরেজের অ্যাক্সেস দেয়। একবার চালালেই হবে।</p><p><b>৪.</b> <code>pkg install openssh</code> — তারপর <code>sshd</code> দিয়ে দূর থেকে ফোনে ঢুকো।</p><p><b>৫.</b> <code>pkg install nano</code> — দ্রুত এডিটের জন্য সহজ এডিটর।</p><p>ব্যাস। দুই মিনিটে তোমার পকেট টার্মিনাল একটা ডেভ মেশিন।</p>'}},
+a2:{t:{en:"Install Any V4Z Tool in 60 Seconds",bn:"৬০ সেকেন্ডে যেকোনো V4Z টুল ইনস্টল করো"},
+b:{en:'<p>Every V4Z tool follows the same ritual. Memorize it once, use it forever.</p><p><b>Step 1</b> — copy the install command from the project card, e.g. <code>curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDYTDownloaderTermuxx/main/install.sh | bash</code></p><p><b>Step 2</b> — paste it in Termux, hit enter, grant storage when asked.</p><p><b>Step 3</b> — run the short launcher: <code>v4zyt</code>, <code>v4zscan</code>, <code>v4zmegabot</code>.</p><p>Uninstall is just as clean — every repo ships an <code>uninstall.sh</code>. No leftovers, no clutter.</p>',
+bn:'<p>প্রতিটা V4Z টুল একই নিয়মে চলে। একবার মুখস্থ করো, সারাজীবন কাজে লাগবে।</p><p><b>ধাপ ১</b> — প্রজেক্ট কার্ড থেকে ইনস্টল কমান্ড কপি করো, যেমন <code>curl -fsSL https://raw.githubusercontent.com/v4zrashd/RASHDYTDownloaderTermuxx/main/install.sh | bash</code></p><p><b>ধাপ ২</b> — Termux-এ পেস্ট করে এন্টার চাপো, চাইলে স্টোরেজ পারমিশন দাও।</p><p><b>ধাপ ৩</b> — ছোট লঞ্চার চালাও: <code>v4zyt</code>, <code>v4zscan</code>, <code>v4zmegabot</code>।</p><p>আনইনস্টলও একইরকম পরিষ্কার — প্রতিটা রিপোতে <code>uninstall.sh</code> আছে। কোনো জঞ্জাল না।</p>'}},
+a3:{t:{en:"Why I Never Copy Other People's Tools",bn:"কেন আমি কখনো অন্যের টুল কপি করি না"},
+b:{en:'<p>Rebranding someone\'s repo takes ten minutes. Understanding it takes ten days. I choose the ten days.</p><p>Every V4Z tool is written from scratch — my banner, my installer, my code. When something breaks at 2AM, I can fix it, because I built it.</p><p>Copied tools teach you nothing and earn you nothing. The community can smell a rebrand from a mile away — and respect flows the other direction.</p><p><b>My creed:</b> original code. No copies. No stolen credits. Ship while you sleep.</p>',
+bn:'<p>অন্যের রিপো রিব্র্যান্ড করতে দশ মিনিট লাগে। সেটা বুঝতে দশ দিন লাগে। আমি দশ দিনটাই বেছে নিই।</p><p>প্রতিটা V4Z টুল স্ক্র্যাচ থেকে লেখা — আমার ব্যানার, আমার ইনস্টলার, আমার কোড। রাত ২টায় কিছু ভাঙলে আমি ঠিক করতে পারি, কারণ আমিই বানিয়েছি।</p><p>কপি করা টুল তোমাকে কিছু শেখায় না, কিছু অর্জনও দেয় না। কমিউনিটি দূর থেকেই রিব্র্যান্ডের গন্ধ পায় — আর সম্মান যায় উল্টো দিকে।</p><p><b>আমার নীতি:</b> অরিজিনাল কোড। কপি না। চুরি করা ক্রেডিট না। তুমি ঘুমাও, আমি শিপ করি।</p>'}}
+};
+(function(){
+  const modal=document.getElementById('blogModal');
+  document.querySelectorAll('.blog-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const a=ARTICLES[card.dataset.article]; if(!a)return;
+      document.getElementById('bmTitle').textContent=a.t[LANG]||a.t.en;
+      document.getElementById('bmDate').textContent=card.querySelector('.bdate').textContent;
+      document.getElementById('bmBody').innerHTML=a.b[LANG]||a.b.en;
+      modal.classList.add('open'); document.body.style.overflow='hidden'; SFX.pop();
+    });
+  });
+  function close(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('blogClose').addEventListener('click',close);
+  modal.addEventListener('click',e=>{ if(e.target===modal)close(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){close(); closeLB(); toggleChat(false);} });
+})();
+
+/* ================= GALLERY LIGHTBOX ================= */
+let galImgs=[], galIdx=0;
+function openLB(i){
+  galIdx=i;
+  const it=galImgs[i], img=it.querySelector('img');
+  const lb=document.getElementById('lbImg');
+  lb.src=img.src; lb.alt=img.alt;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden'; SFX.pop();
+}
+function closeLB(){ document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }
+(function(){
+  galImgs=[...document.querySelectorAll('.gal-item')];
+  galImgs.forEach((it,i)=>it.addEventListener('click',()=>openLB(i)));
+  document.getElementById('lbClose').addEventListener('click',closeLB);
+  document.getElementById('lightbox').addEventListener('click',e=>{ if(e.target.id==='lightbox')closeLB(); });
+  document.getElementById('lbPrev').addEventListener('click',e=>{e.stopPropagation(); openLB((galIdx-1+galImgs.length)%galImgs.length);});
+  document.getElementById('lbNext').addEventListener('click',e=>{e.stopPropagation(); openLB((galIdx+1)%galImgs.length);});
+})();
+
+/* ================= TESTIMONIALS SLIDER ================= */
+(function(){
+  const track=document.getElementById('testiTrack'), dots=document.getElementById('testiDots');
+  const n=track.children.length; let idx=0, timer;
+  for(let i=0;i<n;i++){ const b=document.createElement('button'); b.setAttribute('aria-label','Review '+(i+1)); b.addEventListener('click',()=>go(i)); dots.appendChild(b); }
+  function go(i){ idx=(i+n)%n; track.style.transform=`translateX(-${idx*100}%)`; [...dots.children].forEach((d,j)=>d.classList.toggle('active',j===idx)); restart(); }
+  function restart(){ clearInterval(timer); timer=setInterval(()=>go(idx+1),5000); }
+  go(0);
+})();
+
+/* ================= CONTACT FORM → TELEGRAM ================= */
+// ★★★ SETUP: 1) @BotFather থেকে bot বানিয়ে token নাও  2) @userinfobot থেকে তোমার numeric chat id নাও  3) নিচে বসাও
+// NOTE: token না বসালে ফর্ম মেসেজ কপি করে তোমার Telegram DM খুলে দেবে — ম্যানুয়ালি পাঠাতে হবে।
+const TG_BOT_TOKEN = "";
+const TG_CHAT_ID = "";
+function toast(msg,ms){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),ms||3200);
+}
+document.getElementById('contactForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const name=document.getElementById('cfName').value.trim(),
+        contact=document.getElementById('cfContact').value.trim(),
+        msg=document.getElementById('cfMsg').value.trim();
+  if(!name||!contact||!msg)return;
+  const text=`📨 New message from portfolio\n\n👤 Name: ${name}\n📞 Contact: ${contact}\n\n💬 ${msg}`;
+  SFX.pop();
+  if(TG_BOT_TOKEN && TG_CHAT_ID){
+    try{
+      const r=await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id:TG_CHAT_ID,text})
+      });
+      const d=await r.json();
+      if(d.ok){ toast(LANG==='bn'?'✅ মেসেজ পৌঁছেছে! শীঘ্রই রিপ্লাই দেবো।':'✅ Message delivered! I\'ll reply soon.'); e.target.reset(); }
+      else throw 0;
+    }catch(err){ toast(LANG==='bn'?'❌ পাঠানো যায়নি, আবার চেষ্টা করো।':'❌ Couldn\'t send, try again.'); }
+  }else{
+    try{ await navigator.clipboard.writeText(text); }catch(err){}
+    window.open('https://t.me/Darkbdx1','_blank');
+    toast(LANG==='bn'?'📋 মেসেজ কপি হয়েছে — Telegram চ্যাটে পেস্ট করে পাঠাও।':'📋 Message copied — paste it in the Telegram chat to send.');
+    e.target.reset();
+  }
+});
+
+/* ================= CHATBOT ================= */
+const CHAT_RULES=[
+  {k:['hello','hi','hey','সালাম','হাই','hello '],r:{en:"Hey! 👋 I'm the V4Z assistant. Ask me about <b>tools</b>, <b>install</b>, <b>price</b> or <b>contact</b>.",bn:"হেই! 👋 আমি V4Z অ্যাসিস্ট্যান্ট। <b>টুল</b>, <b>ইনস্টল</b>, <b>দাম</b> বা <b>যোগাযোগ</b> নিয়ে জিজ্ঞেস করো।"}},
+  {k:['tool','টুল','project','প্রজেক্ট','bot','বট'],r:{en:"🛠️ <b>V4Z arsenal:</b><br>• v4zyt — YT/video downloader<br>• v4zmegabot — all-in-one Telegram bot<br>• v4zscan — IP scanner<br>• Web Ripper — offline site saver<br>• Hermes Agent installer<br>See the <a href='#projects'>Projects</a> section!",bn:"🛠️ <b>V4Z অস্ত্রাগার:</b><br>• v4zyt — ভিডিও ডাউনলোডার<br>• v4zmegabot — অল-ইন-ওয়ান টেলিগ্রাম বট<br>• v4zscan — IP স্ক্যানার<br>• Web Ripper — অফলাইন সাইট সেভার<br>• Hermes Agent ইনস্টলার<br><a href='#projects'>প্রজেক্ট</a> সেকশনে দেখো!"}},
+  {k:['install','ইনস্টল','setup','সেটআপ','how'],r:{en:"⚡ <b>60-second install:</b><br>1. Copy the install command from any project card<br>2. Paste in Termux → Enter<br>3. Run the launcher (<code>v4zyt</code>, <code>v4zscan</code>…)<br>Done!",bn:"⚡ <b>৬০ সেকেন্ডে ইনস্টল:</b><br>১. প্রজেক্ট কার্ড থেকে ইনস্টল কমান্ড কপি করো<br>২. Termux-এ পেস্ট → এন্টার<br>৩. লঞ্চার চালাও (<code>v4zyt</code>, <code>v4zscan</code>…)<br>শেষ!"}},
+  {k:['price','দাম','cost','টাকা','charge'],r:{en:"💰 All services are <b>negotiable</b> — custom bots, Termux tools, portfolio sites. DM <a href='https://t.me/Darkbdx1' target='_blank'>@Darkbdx1</a> with your idea!",bn:"💰 সব সার্ভিসের দাম <b>আলোচনা সাপেক্ষ</b> — কাস্টম বট, Termux টুল, পোর্টফোলিও সাইট। আইডিয়া নিয়ে <a href='https://t.me/Darkbdx1' target='_blank'>@Darkbdx1</a>-এ DM করো!"}},
+  {k:['contact','যোগাযোগ','telegram','টেলিগ্রাম','dm'],r:{en:"📨 Fastest: Telegram DM <a href='https://t.me/Darkbdx1' target='_blank'>@Darkbdx1</a><br>📢 Channel: <a href='https://t.me/rashdteem' target='_blank'>@rashdteem</a><br>Or use the contact form below!",bn:"📨 সবচেয়ে দ্রুত: টেলিগ্রাম DM <a href='https://t.me/Darkbdx1' target='_blank'>@Darkbdx1</a><br>📢 চ্যানেল: <a href='https://t.me/rashdteem' target='_blank'>@rashdteem</a><br>অথবা নিচের ফর্ম ব্যবহার করো!"}},
+  {k:['who','তুমি কে','rashed','রাশেদ','v4z'],r:{en:"👤 <b>V4Z RASHD</b> — Termux tool developer & Telegram bot maker from Bangladesh. 100% original code, mobile-first everything.",bn:"👤 <b>V4Z RASHD</b> — বাংলাদেশের Termux টুল ডেভেলপার ও টেলিগ্রাম বট মেকার। ১০০% অরিজিনাল কোড, সব মোবাইল-ফার্স্ট।"}}
+];
+function botReply(q){
+  const s=q.toLowerCase();
+  for(const rule of CHAT_RULES){ if(rule.k.some(k=>s.includes(k))) return rule.r[LANG]||rule.r.en; }
+  return LANG==='bn'
+    ? "হুম, বুঝলাম না 🤔 <b>টুল</b>, <b>ইনস্টল</b>, <b>দাম</b> বা <b>যোগাযোগ</b> নিয়ে জিজ্ঞেস করো — অথবা সরাসরি <a href='https://t.me/Darkbdx1' target='_blank'>@Darkbdx1</a>-এ মেসেজ করো!"
+    : "Hmm, didn't catch that 🤔 Ask about <b>tools</b>, <b>install</b>, <b>price</b> or <b>contact</b> — or DM <a href='https://t.me/Darkbdx1' target='_blank'>@Darkbdx1</a> directly!";
+}
+function toggleChat(force){
+  const p=document.getElementById('chatPanel');
+  const open = force!==undefined ? force : !p.classList.contains('open');
+  p.classList.toggle('open',open);
+  if(open && !document.getElementById('chatMsgs').children.length){
+    botSay(LANG==='bn'?"👋 সালাম! আমি V4Z অ্যাসিস্ট্যান্ট। কী জানতে চাও?":"👋 Hey! I'm the V4Z assistant. What do you want to know?");
+  }
+  if(open) setTimeout(()=>document.getElementById('chatInput').focus(),300);
+}
+function bubble(text,who){
+  const d=document.createElement('div'); d.className='msg '+who; d.innerHTML=text;
+  const box=document.getElementById('chatMsgs'); box.appendChild(d); box.scrollTop=box.scrollHeight;
+}
+function botSay(t){ bubble(t,'bot'); SFX.blip&&SFX.blip(600); }
+document.getElementById('chatBtn').addEventListener('click',()=>{toggleChat(); SFX.pop();});
+document.getElementById('chatClose').addEventListener('click',()=>toggleChat(false));
+document.getElementById('chatForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const inp=document.getElementById('chatInput'), q=inp.value.trim();
+  if(!q)return;
+  bubble(q.replace(/</g,'&lt;'),'user'); inp.value='';
+  const tp=document.createElement('div'); tp.className='msg bot typing-dots'; tp.innerHTML='<span></span><span></span><span></span>';
+  const box=document.getElementById('chatMsgs'); box.appendChild(tp); box.scrollTop=box.scrollHeight;
+  setTimeout(()=>{ tp.remove(); botSay(botReply(q)); },700+Math.random()*600);
+});
+
+/* ================= VISITOR COUNTER ================= */
+(function(){
+  try{
+    let v=parseInt(localStorage.getItem('v4z_visits')||'0',10)+1;
+    localStorage.setItem('v4z_visits',v);
+    document.getElementById('visits').textContent=v;
+  }catch(e){}
+})();
+
+/* ================= LOADER ================= */
+(function(){
+  const pct=document.getElementById('loadPct'); let p=0;
+  const iv=setInterval(()=>{ p=Math.min(p+Math.random()*22,96); pct.textContent=Math.round(p)+'%'; },180);
+  function done(){ clearInterval(iv); pct.textContent='100%'; setTimeout(()=>document.getElementById('loader').classList.add('done'),350); }
+  window.addEventListener('load',()=>setTimeout(done,900));
+  setTimeout(done,4500);
+})();
+</script>
+</body>
+</html>
