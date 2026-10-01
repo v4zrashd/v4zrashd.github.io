@@ -214,6 +214,8 @@ h1.hero-title .l2{background:linear-gradient(90deg,var(--green),var(--cyan),var(
 .gal-item:hover{transform:scale(1.03);border-color:var(--green);box-shadow:0 14px 40px rgba(0,255,136,.15)}
 .gal-item img{width:100%;height:100%;object-fit:cover;display:block}
 .gal-item .cap{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;font-size:.8rem;background:linear-gradient(transparent,rgba(0,0,0,.85));color:var(--text)}
+.gal-loading{grid-column:1/-1;text-align:center;color:var(--dim);padding:34px;font-size:.9rem;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.45}}
 #lightbox{position:fixed;inset:0;z-index:2000;background:rgba(2,5,3,.92);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:4vw}
 #lightbox.open{display:flex}
 #lightbox img{max-width:92vw;max-height:84vh;border-radius:12px;border:1px solid var(--border);box-shadow:0 30px 90px rgba(0,255,136,.2)}
@@ -507,14 +509,9 @@ footer .visits{font-family:Consolas,monospace;font-size:.78rem;margin-top:8px;di
   <div class="sec-num reveal">06 // ARCHIVE</div>
   <span class="sec-tag reveal" data-i18n="gal_tag">Gallery</span>
   <h2 class="sec-title reveal" data-i18n="gal_title">Visual <span class="grad">drops</span></h2>
-  <p class="sec-sub reveal" data-i18n="gal_sub">Banners, avatars and artwork from the V4Z universe. Click to enlarge.</p>
-  <div class="gal-grid">
-    <div class="gal-item reveal" data-cap="V4Z YT Downloader — official banner"><img src="https://i.ibb.co/9mH272PC/V4-Z-YT-Downloader-banner.jpg" alt="YT Downloader banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z YT Downloader</div></div>
-    <div class="gal-item reveal" data-cap="V4Z Mega Bot — official banner"><img src="https://i.ibb.co/dwHYV219/V4-Z-Mega-Bot-banner.jpg" alt="Mega Bot banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z Mega Bot</div></div>
-    <div class="gal-item reveal" data-cap="V4Z IP Scanner — official banner"><img src="https://i.ibb.co/ksMcvVCy/banner.jpg" alt="IP Scanner banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z IP Scanner</div></div>
-    <div class="gal-item reveal" data-cap="V4Z Web Ripper — official banner"><img src="https://files.catbox.moe/cukyf4.jpg" alt="Web Ripper banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z Web Ripper</div></div>
-    <div class="gal-item reveal" data-cap="V4Z Hermes Agent — official banner"><img src="https://i.ibb.co/m5pPzNX7/V4-Z-Hermes-Termux-banner.jpg" alt="Hermes banner" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">V4Z Hermes Agent</div></div>
-    <div class="gal-item reveal" data-cap="V4Z RASHD — profile avatar"><img src="https://github.com/v4zrashd.png" alt="V4Z RASHD avatar" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">Profile Avatar</div></div>
+  <p class="sec-sub reveal" data-i18n="gal_sub">Banners & screenshots, auto-synced from my GitHub repos. Click any pic to enlarge.</p>
+  <div class="gal-grid" id="galGrid">
+    <div class="gal-loading" id="galLoading">⟳ syncing pics from GitHub…</div>
   </div>
 </section>
 
@@ -708,7 +705,7 @@ b1t:"Termux Setup: 5 Commands Every Beginner Needs",b1d:"Fresh Termux install? T
 b2t:"Install Any V4Z Tool in 60 Seconds",b2d:"One curl command, one launcher name. Here's exactly how every V4Z tool installs and runs.",
 b3t:"Why I Never Copy Other People's Tools",b3d:"Rebranding someone else's work is easy. Building your own is the whole point. My creed, explained.",
 read:"Read →",
-gal_tag:"Gallery",gal_title:'Visual <span class="grad">drops</span>',gal_sub:"Banners, avatars and artwork from the V4Z universe. Click to enlarge.",
+gal_tag:"Gallery",gal_title:'Visual <span class="grad">drops</span>',gal_sub:"Banners & screenshots, auto-synced from my GitHub repos. Click any pic to enlarge.",
 tst_tag:"Testimonials",tst_title:'What users <span class="grad">say</span>',tst_sub:"Real feedback from the Termux community. (Your review could be next.)",
 svc_tag:"Services",svc_title:'Work <span class="grad">with me</span>',svc_sub:"Need something custom built? I ship fast, and everything is original code.",
 s1t:"Custom Telegram Bot",s1l1:"Buttons, menus & inline queries",s1l2:"API integrations",s1l3:"Deploy guide for Termux/VPS",
@@ -762,7 +759,7 @@ b1t:"Termux সেটআপ: প্রত্যেক বিগিনারে�
 b2t:"৬০ সেকেন্ডে যেকোনো V4Z টুল ইনস্টল করো",b2d:"একটা curl কমান্ড, একটা লঞ্চার নাম। প্রতিটা V4Z টুল ঠিক কীভাবে ইনস্টল আর রান হয়।",
 b3t:"কেন আমি কখনো অন্যের টুল কপি করি না",b3d:"অন্যের কাজ রিব্র্যান্ড করা সহজ। নিজে বানানোই আসল কথা। আমার নীতি, ব্যাখ্যাসহ।",
 read:"পড়ো →",
-gal_tag:"গ্যালারি",gal_title:'ভিজ্যুয়াল <span class="grad">ড্রপস</span>',gal_sub:"V4Z ইউনিভার্সের ব্যানার, অ্যাভাটার আর আর্টওয়ার্ক। বড় দেখতে ক্লিক করো।",
+gal_tag:"গ্যালারি",gal_title:'ভিজ্যুয়াল <span class="grad">ড্রপস</span>',gal_sub:"আমার GitHub রিপো থেকে অটো-সিংক করা ব্যানার ও স্ক্রিনশট। বড় দেখতে যেকোনো ছবিতে ক্লিক করো।",
 tst_tag:"রিভিউ",tst_title:'ইউজাররা <span class="grad">যা বলে</span>',tst_sub:"Termux কমিউনিটির আসল ফিডব্যাক। (পরের রিভিউটা তোমার হতে পারে।)",
 svc_tag:"সার্ভিস",svc_title:'আমার সাথে <span class="grad">কাজ করো</span>',svc_sub:"কাস্টম কিছু বানাতে চাও? আমি দ্রুত শিপ করি, আর সব অরিজিনাল কোড।",
 s1t:"কাস্টম টেলিগ্রাম বট",s1l1:"বাটন, মেনু ও ইনলাইন কুয়েরি",s1l2:"API ইন্টিগ্রেশন",s1l3:"Termux/VPS ডিপ্লয় গাইড",
@@ -1072,6 +1069,69 @@ bn:'<p>অন্যের রিপো রিব্র্যান্ড কর�
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'){close(); closeLB(); toggleChat(false);} });
 })();
 
+/* ================= AUTO GALLERY — GitHub synced ================= */
+// নতুন রিপো বানিয়ে README-তে ছবি দিলেই এখানে অটো শো করবে — হাত দিয়ে আপডেট লাগবে না।
+// (24 ঘণ্টার cache; localStorage-এ 'v4z_gal_cache' মুছলে সাথে সাথে রিফ্রেশ হবে।)
+const GAL_SKIP=['v4zrashd.github.io','v4zrashd'];
+const GAL_BAD=['shields.io','readme-typing-svg','github-readme-stats','streak-stats','top-langs','komarev','visitor-badge','profile-counter','badge.svg'];
+const GAL_EXTRA=[
+ {src:'https://raw.githubusercontent.com/v4zrashd/RASHD-TermuxStylePro/main/screenshots/Screenshot_20260724-044053.png',cap:'RASHD TermuxStylePro — screenshot'},
+ {src:'https://raw.githubusercontent.com/v4zrashd/RASHD-TermuxStylePro/main/screenshots/Screenshot_20260724-044153.png',cap:'RASHD TermuxStylePro — screenshot'},
+ {src:'https://raw.githubusercontent.com/v4zrashd/RASHD-TermuxStylePro/main/screenshots/Screenshot_20260724-044438.png',cap:'RASHD TermuxStylePro — screenshot'},
+ {src:'https://raw.githubusercontent.com/v4zrashd/RASHD-TermuxStylePro/main/screenshots/Screenshot_20260724-115119.png',cap:'RASHD TermuxStylePro — screenshot'},
+ {src:'https://raw.githubusercontent.com/v4zrashd/rashd-chatbot/main/assets/banner.jpg',cap:'rashd-chatbot — banner'},
+ {src:'https://raw.githubusercontent.com/v4zrashd/rashd-chatbot/main/assets/logo.jpg',cap:'rashd-chatbot — logo'}
+];
+const GAL_AVATAR={src:'https://github.com/v4zrashd.png',cap:'V4Z RASHD — profile avatar'};
+const galIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible'); galIO.unobserve(e.target);} }),{threshold:.12});
+function galItemHTML(it){
+  const c=it.cap.replace(/"/g,'&quot;');
+  return `<div class="gal-item reveal" data-cap="${c}"><img src="${it.src}" alt="${c}" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="cap">${c}</div></div>`;
+}
+function renderGallery(items){
+  const grid=document.getElementById('galGrid');
+  grid.innerHTML=items.map(galItemHTML).join('');
+  grid.querySelectorAll('.reveal').forEach(el=>galIO.observe(el));
+  bindGallery();
+}
+function prettyRepo(name){
+  const p=name.replace(/^RASHD/i,'').replace(/Termuxx?$/i,'').replace(/[-_]+/g,' ').trim();
+  return p||name;
+}
+async function fetchGalItems(){
+  const repos=await (await fetch('https://api.github.com/users/v4zrashd/repos?per_page=100&sort=updated')).json();
+  const seen=new Set(), items=[];
+  for(const r of repos){
+    if(GAL_SKIP.includes(r.name)) continue;
+    try{
+      const md=await (await fetch(`https://raw.githubusercontent.com/v4zrashd/${r.name}/${r.default_branch||'main'}/README.md`)).text();
+      if(!md||md.startsWith('404')) continue;
+      const imgs=[...md.matchAll(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g)].map(m=>m[1])
+        .concat([...md.matchAll(/<img[^>]+src=["'](https?:\/\/[^"']+)["']/gi)].map(m=>m[1]));
+      for(const u of imgs){
+        if(GAL_BAD.some(b=>u.includes(b))||seen.has(u)) continue;
+        seen.add(u);
+        items.push({src:u,cap:prettyRepo(r.name)+' — banner'});
+      }
+    }catch(e){}
+  }
+  return items;
+}
+async function loadGallery(){
+  const KEY='v4z_gal_cache', TTL=864e5;
+  let cached=null;
+  try{ cached=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  const full=(items)=>[...items, ...GAL_EXTRA.filter(x=>!items.some(i=>i.src===x.src)), GAL_AVATAR];
+  if(cached&&Date.now()-cached.ts<TTL&&cached.items&&cached.items.length) renderGallery(full(cached.items));
+  try{
+    const items=await fetchGalItems();
+    if(items.length){
+      try{ localStorage.setItem(KEY,JSON.stringify({ts:Date.now(),items})); }catch(e){}
+      renderGallery(full(items));
+    }else if(!cached) renderGallery(full([]));
+  }catch(e){ if(!cached) renderGallery(full([])); }
+}
+
 /* ================= GALLERY LIGHTBOX ================= */
 let galImgs=[], galIdx=0;
 function openLB(i){
@@ -1083,14 +1143,15 @@ function openLB(i){
   document.body.style.overflow='hidden'; SFX.pop();
 }
 function closeLB(){ document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }
-(function(){
+function bindGallery(){
   galImgs=[...document.querySelectorAll('.gal-item')];
-  galImgs.forEach((it,i)=>it.addEventListener('click',()=>openLB(i)));
-  document.getElementById('lbClose').addEventListener('click',closeLB);
-  document.getElementById('lightbox').addEventListener('click',e=>{ if(e.target.id==='lightbox')closeLB(); });
-  document.getElementById('lbPrev').addEventListener('click',e=>{e.stopPropagation(); openLB((galIdx-1+galImgs.length)%galImgs.length);});
-  document.getElementById('lbNext').addEventListener('click',e=>{e.stopPropagation(); openLB((galIdx+1)%galImgs.length);});
-})();
+  galImgs.forEach((it,i)=>{ it.onclick=()=>openLB(i); });
+}
+document.getElementById('lbClose').addEventListener('click',closeLB);
+document.getElementById('lightbox').addEventListener('click',e=>{ if(e.target.id==='lightbox')closeLB(); });
+document.getElementById('lbPrev').addEventListener('click',e=>{e.stopPropagation(); openLB((galIdx-1+galImgs.length)%galImgs.length);});
+document.getElementById('lbNext').addEventListener('click',e=>{e.stopPropagation(); openLB((galIdx+1)%galImgs.length);});
+loadGallery();
 
 /* ================= TESTIMONIALS SLIDER ================= */
 (function(){
